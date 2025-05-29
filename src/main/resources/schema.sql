@@ -8,9 +8,9 @@ DROP TABLE IF EXISTS members;
 -- Member 테이블
 CREATE TABLE members (
                          id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                         email VARCHAR(255) NOT NULL UNIQUE,
-                         password VARCHAR(255) NOT NULL,
-                         nickname VARCHAR(50) NOT NULL,
+                         email VARCHAR(254) NOT NULL UNIQUE,
+                         password VARCHAR(100) NOT NULL,
+                         nickname VARCHAR(20) NOT NULL,
                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
