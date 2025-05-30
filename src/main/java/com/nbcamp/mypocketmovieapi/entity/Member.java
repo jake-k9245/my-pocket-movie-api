@@ -1,11 +1,12 @@
 package com.nbcamp.mypocketmovieapi.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @Entity
@@ -31,5 +32,13 @@ public class Member extends BaseEntity {
     @Column(nullable = false,
             length = 20)
     private String nickname;
+
+
+    // 진환님 생성한 contents list
+    @OneToMany(mappedBy = "content_id",
+        orphanRemoval = true,
+        cascade = CascadeType.ALL)
+    List<Content> createdContentsList;
+
 
 }
