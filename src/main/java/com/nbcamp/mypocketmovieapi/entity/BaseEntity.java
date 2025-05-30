@@ -18,11 +18,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class BaseEntity {
 
-    @CreatedDate
+    @CreatedDate // JPA 어노테이션
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @LastModifiedDate
+    @LastModifiedDate // JPA 어노테이션
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }

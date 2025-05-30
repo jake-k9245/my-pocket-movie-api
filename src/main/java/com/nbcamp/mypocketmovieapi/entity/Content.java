@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,8 +20,9 @@ public class Content extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id")
-    private Integer memberId;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member; // JPA를 활용한 객체 연관관계 (더 많이 사용되는 형태)
 
     @Column(name = "external_id", nullable = false)
     private String externalId;
@@ -35,17 +37,6 @@ public class Content extends BaseEntity {
     private String overView;
 
     @Column(name = "release_date")
-    private Integer releaseDate;
+    private LocalDate releaseDate; // LocalDate = 1999-09-09와 같은 날짜 형식
 
-    @Column(name = "created_at", updatable = false) // 수정
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
 }
