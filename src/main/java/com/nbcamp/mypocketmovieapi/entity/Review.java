@@ -18,12 +18,14 @@ public class Review extends BaseEntity {
 
     // fetch = FetchType.LAZY : 연관된 Entity를 즉시 Loading 하지 않고 필요할 때만 조회
     // Review : Member = N : 1
+    // memberId를 Foreign Key로 설정
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     // fetch = FetchType.LAZY : 연관된 Entity를 즉시 Loading 하지 않고 필요할 때만 조회
     // Review : Content = N : 1
+    // contentId를 Foreign Key로 설정
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "content_id", nullable = false)
     private Content content;
