@@ -17,12 +17,14 @@ public class ReviewLike extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
+    // fetch = FetchType.LAZY : 연관된 Entity를 즉시 Loading 하지 않고 필요할 때만 조회
     // ReviewLike : Member = N : 1
     // memberId를 Foreign Key로 설정
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    // fetch = FetchType.LAZY : 연관된 Entity를 즉시 Loading 하지 않고 필요할 때만 조회
     // ReviewLike : Review = N : 1
     // reviewId를 Foreign Key로 설정
     @ManyToOne(fetch = FetchType.LAZY)
