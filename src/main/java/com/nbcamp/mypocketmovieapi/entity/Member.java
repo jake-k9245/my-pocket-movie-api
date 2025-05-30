@@ -1,6 +1,8 @@
 package com.nbcamp.mypocketmovieapi.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +16,20 @@ public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // @Email 어노테이션 한계로 패턴 정규식 사용
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")
+    @Column(nullable = false,
+            unique = true,
+            length = 254)
+    private String email;
+
+    @Column(nullable = false,
+            length = 100)
+    private String password;
+
+    @Column(nullable = false,
+            length = 20)
+    private String nickname;
 
 }
