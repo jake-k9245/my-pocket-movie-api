@@ -10,8 +10,11 @@ import lombok.NoArgsConstructor;
 @Table(name = "review_likes")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReviewLike extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
 
 }
