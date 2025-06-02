@@ -2,6 +2,7 @@ package com.nbcamp.mypocketmovieapi.controller;
 
 import com.nbcamp.mypocketmovieapi.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -9,4 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
     private final MemberService memberService;
 
+    @PostMapping("/api/")
+    public void saveMember() {
+
+    }
 }
