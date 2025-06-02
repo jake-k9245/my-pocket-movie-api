@@ -1,6 +1,6 @@
 package com.nbcamp.mypocketmovieapi.service;
 
-import com.nbcamp.mypocketmovieapi.dto.members.ResponseDtoCreatedMember;
+import com.nbcamp.mypocketmovieapi.dto.members.CreatedMemberResponseDto;
 import com.nbcamp.mypocketmovieapi.entity.Member;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,16 +10,20 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberJpaRepository memberJpaRepository;
-    private final Member member;
-    private final ResponseDtoCreatedMember responseDtoCreatedMember;
 
     // 회원가입
-    public ResponseDtoCreatedMember createMember(String email, String password, String nickname){
+    public CreatedMemberResponseDto createMember(String email, String password, String nickname){
 
-        Member createdMember = member(email, password, nickname);
+        Member createdMember = new Member(email, password, nickname);
         Member savedMember = memberJpaRepository.save(createdMember);
-        ResponseDtoCreatedMember responseDtoCreatedMember1 = ;
-        return ;
+        CreatedMemberResponseDto responseDto = new CreatedMemberResponseDto(
+                savedMember.getId(),
+                savedMember.getEmail(),
+                savedMember.getNickname()
+        );
+
+        return responseDto;
+        // Q) 직접 반환(inline return)하면 가독성이 떨어져보이는데, 내가 초보라 그런건가? 이렇게 변수에 담아서 반환하는게 이 경우에는 안 좋나?
     }
 
     // 로그인
