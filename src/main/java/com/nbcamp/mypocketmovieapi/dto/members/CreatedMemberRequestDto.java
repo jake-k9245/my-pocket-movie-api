@@ -1,13 +1,12 @@
 package com.nbcamp.mypocketmovieapi.dto.members;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
-public class ResponseDtoCreatedMember {
-    private Long memberId;
+public class CreatedMemberRequestDto {
+
     private String email;
+    private String password;
     private String nickname;
 
 }
