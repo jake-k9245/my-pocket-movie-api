@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "wishlists")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WishList extends BaseEntity {
+public class Wishlist extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
