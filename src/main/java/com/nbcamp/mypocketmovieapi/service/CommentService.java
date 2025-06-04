@@ -1,6 +1,8 @@
 package com.nbcamp.mypocketmovieapi.service;
 
+import com.nbcamp.mypocketmovieapi.dto.CommentResponseDto;
 import com.nbcamp.mypocketmovieapi.dto.SaveCommentRequestDto;
+import com.nbcamp.mypocketmovieapi.dto.UpdateCommentRequestDto;
 import com.nbcamp.mypocketmovieapi.entity.Comment;
 import com.nbcamp.mypocketmovieapi.entity.Member;
 import com.nbcamp.mypocketmovieapi.entity.Review;
@@ -10,7 +12,9 @@ import com.nbcamp.mypocketmovieapi.repository.ReviewJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,4 +43,56 @@ public class CommentService {
         commentJpaRepository.save(comment); // => insert into
     }
 
+    public void updateComments(Long memberId, Long commentId, UpdateCommentRequestDto requestDto) {
+        // 수정 하려는 회원의 정보를 조회
+        Member member =  memberJpaRepository.findById(memberId).orElseThrow(
+                () -> new RuntimeException("해당하는 멤버가 존재하지 않습니다.")
+        );
+        // 수정 하려는 댓글의 정보를 조회
+        Comment comment = commentJpaRepository.findById(commentId).orElseThrow(
+                () -> new RuntimeException("해당하는 댓글이 존재하지 않습니다.")
+        );
+        // 수정 하려는 회원의 id와 수정 하려는 댓글을 작성한 회원의 id가 일치하는 경우에만 수정 가능
+        if(!Objects.equals(member.getId(), comment.getMember().getId())) {
+            // 수정 하려는 회원의 id와 수정 하려는 댓글을 작성한 회원의 id가 일치하지 않는 경우에 실행됨.
+            throw new RuntimeException("댓글을 작성한 회원만 수정이 가능합니다.");
+        }
+        // 수정 진행
+        comment.updateText(requestDto.getText());
+        commentJpaRepository.save(comment); // insert & update (새로 생성되는 entity는 insert, DB에서 조회해온 entity는 update)
+    }
+
+    public void deleteComments(Long memberId, Long commentId) {
+        // 삭제 하려는 회원의 정보를 조회
+        Member member =  memberJpaRepository.findById(memberId).orElseThrow(
+                () -> new RuntimeException("해당하는 멤버가 존재하지 않습니다.")
+        );
+        // 삭제 하려는 댓글의 정보를 조회
+        Comment comment = commentJpaRepository.findById(commentId).orElseThrow(
+                () -> new RuntimeException("해당하는 댓글이 존재하지 않습니다.")
+        );
+        // 삭제 하려는 회원의 id와 삭제 하려는 댓글을 작성한 회원의 id가 일치하는 경우에만 삭제 가능
+        if(!Objects.equals(member.getId(), comment.getMember().getId())) {
+            // 삭제 하려는 회원의 id와 삭제 하려는 댓글을 작성한 회원의 id가 일치하지 않는 경우에 실행됨.
+            throw new RuntimeException("댓글을 작성한 회원만 수정이 가능합니다.");
+        }
+        commentJpaRepository.delete(comment); // delete
+    }
+
+    public List<CommentResponseDto> getComments(Long reviewId) {
+        // 댓글이 달려있는 리뷰 정보 조회
+        Review review = reviewJpaRepository.findById(reviewId).orElseThrow(
+                () -> new RuntimeException("해당하는 리뷰가 존재하지 않습니다.")
+        );
+        // 해당 리뷰에 달린 모든 댓글 조회
+        List<CommentResponseDto> responseDtoList = new ArrayList<>();
+
+        List<Comment> commentList = commentJpaRepository.findByReview(review);
+        for (Comment comment : commentList) {
+            CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
+            responseDtoList.add(commentResponseDto);
+        }
+
+        return responseDtoList;
+    }
 }
