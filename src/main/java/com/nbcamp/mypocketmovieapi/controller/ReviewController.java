@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequestMapping("/api")
-// 공통적으로 들어가는 것을 CLASS LEVEL에  , DETAIL 한 건 해당 METHOD LEVEL에
 @RequiredArgsConstructor
 public class ReviewController {
 
@@ -28,5 +27,3 @@ public class ReviewController {
     }
 
 }
-
-// 현재 임시로 작성자 memberId 1L로 지정

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewService {
     private final ReviewJpaRepository reviewRepository;
     private final MemberJpaRepository memberRepository;
@@ -29,7 +30,7 @@ public class ReviewService {
         );
 
 
-//        Review review = new Review(findMember, findContent, requestDto.getRating(), requestDto.getText());
+
         Review review = Review.builder()
                 .member(findMember)
                 .content(findContent)
@@ -42,8 +43,3 @@ public class ReviewService {
     }
 
 }
-
-// RequiredArgsConstructor : final Repository 생성자
-// findByIdOrElseThrow 할 때 Id-> Email 등의 변경은 emember 담당자가 설정해주는 부분,
-// contentJpa 의존성 추가
-//

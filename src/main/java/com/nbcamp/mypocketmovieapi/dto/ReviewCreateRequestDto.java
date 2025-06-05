@@ -7,7 +7,6 @@ import lombok.Getter;
 public class ReviewCreateRequestDto {
 
     private final Integer Rating;
-
     private final String text;
 
     public ReviewCreateRequestDto(Integer rating, String text) {
