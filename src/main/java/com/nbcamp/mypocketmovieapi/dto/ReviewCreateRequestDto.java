@@ -11,7 +11,6 @@ public class ReviewCreateRequestDto {
     private final String text;
 
     public ReviewCreateRequestDto(Integer rating, String text) {
-
         this.Rating = rating;
         this.text = text;
     }
