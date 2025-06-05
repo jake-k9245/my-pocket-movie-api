@@ -2,6 +2,7 @@ package com.nbcamp.mypocketmovieapi.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,29 @@ public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id", nullable = false)
+    private Review review;
+
+    @Lob
+    @Column(nullable = false)
+    private String text;
+
+    @Builder
+    public Comment(Member member, Review review, String text) {
+        this.member = member;
+        this.review = review;
+        this.text = text;
+    }
+
+    public void updateText(String text) {
+        this.text = text;
+    }
 
 }
 
