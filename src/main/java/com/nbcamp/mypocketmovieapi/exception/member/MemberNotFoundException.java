@@ -1,4 +1,4 @@
 package com.nbcamp.mypocketmovieapi.exception.member;
 
-public class MemberNotFoundException {
+public class MemberNotFoundException extends RuntimeException {
 }
