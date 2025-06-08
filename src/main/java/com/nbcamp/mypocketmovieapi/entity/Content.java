@@ -34,9 +34,8 @@ public class Content extends BaseEntity {
     private String posterPath;
 
     @Column(name = "overview")
-    private String overView;
+    private String overview;
 
     @Column(name = "release_date")
     private LocalDate releaseDate; // LocalDate = 1999-09-09와 같은 날짜 형식
-
 }
