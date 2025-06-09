@@ -4,11 +4,7 @@ package com.nbcamp.mypocketmovieapi.controller;
 import com.nbcamp.mypocketmovieapi.dto.ReviewCreateRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.ReviewResponseDto;
 import com.nbcamp.mypocketmovieapi.service.ReviewService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,9 +20,8 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    /*
-    Review 등록 API
-     */
+
+    // Review 등록 API
     @PostMapping("/contents/{contentId}/reviews")
     public ResponseEntity<ReviewResponseDto> save(@PathVariable Long contentId, @RequestBody ReviewCreateRequestDto requestDto) {
 
@@ -37,12 +32,14 @@ public class ReviewController {
         return new ResponseEntity<>(reviewResponseDto, HttpStatus.CREATED);
     }
 
-    /*
-    Review 전체 조회 API
-     */
+
+    //Review 전체 조회 API
     @GetMapping("/contents/{contentId}/reviews")
-    public ResponseEntity<ReviewResponseDto> findAllReviews(@PathVariable Long contentId) {
-        List<ReviewResponseDto> reviewResponseDtoList = reviewService.findAllReview
+    public List<ReviewResponseDto> getReviews(@PathVariable Long contentId) {
+
+        List<ReviewResponseDto> reviewResponseDtoList = reviewService.getReviews(contentId);
+
+        return reviewResponseDtoList;
     }
 
 
