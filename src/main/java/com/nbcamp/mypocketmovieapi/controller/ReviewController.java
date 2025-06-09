@@ -3,6 +3,7 @@ package com.nbcamp.mypocketmovieapi.controller;
 
 import com.nbcamp.mypocketmovieapi.dto.ReviewCreateRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.ReviewResponseDto;
+import com.nbcamp.mypocketmovieapi.entity.Review;
 import com.nbcamp.mypocketmovieapi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,13 @@ public class ReviewController {
         List<ReviewResponseDto> reviewResponseDtoList = reviewService.getReviews(contentId);
 
         return reviewResponseDtoList;
+    }
+
+    //
+    @GetMapping("/contents/{contentId}}/reviews/{id}")
+    public ResponseEntity<ReviewResponseDto> findById(@PathVariable Long id) {
+
+
     }
 
 
