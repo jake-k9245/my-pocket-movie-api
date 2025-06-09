@@ -19,13 +19,12 @@ CREATE TABLE members (
 CREATE TABLE contents (
                           id BIGINT PRIMARY KEY AUTO_INCREMENT,
                           member_id BIGINT NOT NULL,
-
                           external_id VARCHAR(255) NOT NULL,
                           title VARCHAR(255) NOT NULL,
                           poster_path VARCHAR(512),
                           overview TEXT,
                           release_date DATE,
-
+                          popularity DECIMAL(5,3),
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                           FOREIGN KEY (member_id) REFERENCES members(id)

@@ -17,6 +17,7 @@ public class ContentResponseDto {
     private String posterPath;
     private String overview;
     private LocalDate releaseDate;
+    private double popularity;
 
     public static ContentResponseDto fromEntity(Content content) {
         return ContentResponseDto.builder()
@@ -25,6 +26,7 @@ public class ContentResponseDto {
                 .posterPath(content.getPosterPath())
                 .overview(content.getOverview())
                 .releaseDate(content.getReleaseDate())
+                .popularity(content.getPopularity())
                 .build();
 
     }

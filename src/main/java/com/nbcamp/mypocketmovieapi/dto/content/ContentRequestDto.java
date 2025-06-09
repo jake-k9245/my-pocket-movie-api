@@ -8,11 +8,11 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 public class ContentRequestDto {
-
     private String externalId;
     private String title;
     private String posterPath;
     private String overview;
     private LocalDate releaseDate;
+    private double popularity;
 }
 

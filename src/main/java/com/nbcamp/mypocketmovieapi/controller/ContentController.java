@@ -1,6 +1,8 @@
 package com.nbcamp.mypocketmovieapi.controller;
 
 import com.nbcamp.mypocketmovieapi.dto.content.ContentDetail;
+import com.nbcamp.mypocketmovieapi.dto.content.ContentRequestDto;
+import com.nbcamp.mypocketmovieapi.dto.content.ContentResponseDto;
 import com.nbcamp.mypocketmovieapi.service.ContentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,25 +20,28 @@ public class ContentController {
     // 1. TMDB 영화 검색용 API
     @GetMapping("/search")
     public ResponseEntity<List<ContentDetail>> searchMovies(@RequestParam String keyword) {
-        List<ContentDetail> results = ContentService.findMoviesByKeyword(keyword);
+
+        List<ContentDetail> results = contentService.findMoviesByKeyword(keyword);
         return ResponseEntity.ok(results);
     }
 
-//    // 검색 데이터 기반 콘텐츠 등록 2번
-//    @PostMapping("/api/contents")
-//    public ResponseEntity<ContentResponseDto> createContent(@RequestBody ContentRequestDto requestDto) {
-//        return ResponseEntity.ok(contentService.createContent(requestDto));
-//    }
-//
-//    // 목록 조회 3번
-//    @GetMapping("/api/contents")
-//    public ResponseEntity<ContentResponseDto>createContent(@RequestBody ContentRequestDto requestDto) {
-//        return ResponseEntity.ok(contentService.createContent(requestDto));
-//    }
+    // 2. 검색 데이터 기반 콘텐츠 등록
+    @PostMapping
+    public ResponseEntity<ContentResponseDto> createContent(@RequestBody ContentRequestDto requestDto) {
+        Long memberId = 1L;
+        ContentResponseDto response = contentService.createContent(requestDto, memberId);
+        return ResponseEntity.ok(response);
+    }
 
-//    // 콘텐츠 정보 조회 4번, 완료 - 수정 x
-//    @GetMapping("/api/contents/{id}")
-//    public ResponseEntity<ContentResponseDto> getContent(@PathVariable Long id) {
-//        return ResponseEntity.ok(contentService.getContentById(id));
-//    }
+    // 3. 목록 조회
+    @GetMapping
+    public ResponseEntity<List<ContentResponseDto>>getAllContent() {
+        return ResponseEntity.ok(contentService.findAllContent());
+    }
+
+    // 4. 콘텐츠 정보 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<ContentResponseDto> getContent(@PathVariable Long id) {
+        return ResponseEntity.ok(contentService.getContentById(id));
+    }
 }

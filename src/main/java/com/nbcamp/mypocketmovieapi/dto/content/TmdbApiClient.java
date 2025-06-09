@@ -1,6 +1,5 @@
 package com.nbcamp.mypocketmovieapi.dto.content;
 
-import com.nbcamp.mypocketmovieapi.dto.content.ContentDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -8,11 +7,10 @@ import org.springframework.web.client.RestClient;
 
 @Component
 @RequiredArgsConstructor
-public class TmdbApiClient {
-
+public class TmdbApiClient {  // -> Service로 옮기기
     private final RestClient tmdbRestClient;
 
-    public ContentDetail[] searchMovies(String query) {
+    public ContentDetailList searchMovies(String query) {
         return tmdbRestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/search/movie")
@@ -23,6 +21,6 @@ public class TmdbApiClient {
                         .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .body(ContentDetail[].class);
+                .body(ContentDetailList.class);
     }
 }

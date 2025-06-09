@@ -4,11 +4,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -38,4 +35,17 @@ public class Content extends BaseEntity {
 
     @Column(name = "release_date")
     private LocalDate releaseDate; // LocalDate = 1999-09-09와 같은 날짜 형식
+
+    @Column(name = "popularity")
+    private double popularity;
+
+    public Content(Member member, String externalId, String title, String posterPath, String overview, LocalDate releaseDate, double popularity) {
+        this.member = member;
+        this.externalId = externalId;
+        this.title = title;
+        this.posterPath = posterPath;
+        this.overview = overview;
+        this.releaseDate = releaseDate;
+        this.popularity = popularity;
+    }
 }
