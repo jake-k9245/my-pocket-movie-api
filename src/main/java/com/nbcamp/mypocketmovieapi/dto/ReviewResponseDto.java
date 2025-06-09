@@ -18,5 +18,4 @@ public class ReviewResponseDto {
         this.rating = review.getRating();
         this.text = review.getText();
     }
-
 }

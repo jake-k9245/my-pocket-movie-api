@@ -29,8 +29,6 @@ public class ReviewService {
                 () -> new RuntimeException("해당하는 콘텐츠가 존재하지 않습니다.")
         );
 
-
-
         Review review = Review.builder()
                 .member(findMember)
                 .content(findContent)
@@ -41,5 +39,4 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
         return new ReviewResponseDto(savedReview);
     }
-
 }
