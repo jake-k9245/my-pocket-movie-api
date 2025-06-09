@@ -55,9 +55,12 @@ public class ContentService {
         return ContentResponseDto.fromEntity(savedContent);
     }
 
-    // 3. 목록 조회 로직
-    public List<ContentResponseDto> findAllContent() {
-        return contentJpaRepository.findAll().stream()
+    // 3. 목록 조회 로직 (사용자가 등록한)
+    public List<ContentResponseDto> findAllContent(Long memberId) {
+        Member member = memberJpaRepository.findById(memberId).orElseThrow(
+                () -> new RuntimeException("해당 사용자는 존재하지 않습니다.")
+        );
+        return contentJpaRepository.findByMember(member).stream()
                 .map(ContentResponseDto::fromEntity)
                 .toList();
     }

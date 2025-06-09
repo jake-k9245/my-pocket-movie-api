@@ -19,9 +19,9 @@ public class ContentController {
 
     // 1. TMDB 영화 검색용 API
     @GetMapping("/search")
-    public ResponseEntity<List<ContentDetail>> searchMovies(@RequestParam String keyword) {
+    public ResponseEntity<List<ContentDetail>> searchMovies(@RequestParam String query) {
 
-        List<ContentDetail> results = contentService.findMoviesByKeyword(keyword);
+        List<ContentDetail> results = contentService.findMoviesByKeyword(query);
         return ResponseEntity.ok(results);
     }
 
@@ -35,8 +35,9 @@ public class ContentController {
 
     // 3. 목록 조회
     @GetMapping
-    public ResponseEntity<List<ContentResponseDto>>getAllContent() {
-        return ResponseEntity.ok(contentService.findAllContent());
+    public ResponseEntity<List<ContentResponseDto>> getAllContent() {
+        Long memberId = 1l;
+        return ResponseEntity.ok(contentService.findAllContent(memberId));
     }
 
     // 4. 콘텐츠 정보 조회
