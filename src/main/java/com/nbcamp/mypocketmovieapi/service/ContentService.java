@@ -18,7 +18,6 @@ public class ContentService {
     private final ContentJpaRepository contentJpaRepository;
     private final MemberJpaRepository memberJpaRepository;
 
-
     /**
      * "results": [ => List
      *     { => Object 1개
@@ -31,6 +30,7 @@ public class ContentService {
      *     }
      *   ],
      */
+
     // 1. TMDB 영화 검색 로직
     public List<ContentDetail> findMoviesByKeyword(String keyword) {
         ContentDetailList results = tmdbApiClient.searchMovies(keyword);
@@ -38,10 +38,20 @@ public class ContentService {
     }
 
     // 2. 검색 데이터 콘텐츠 등록 로직
-    public ContentResponseDto createContent(ContentRequestDto requestDto, Long memberId) {
-        Member member = memberJpaRepository.findById(memberId).orElseThrow(
+    public ContentResponseDto createContent(ContentRequestDto requestDto, Long memberid) {
+
+        Member member = memberJpaRepository.findById(memberid).orElseThrow(
                 () -> new RuntimeException("해당 사용자는 존재하지 않습니다.")
         );
+
+        List<Content> duplicated = contentJpaRepository.findDistinctByExternalIdAndMember_Id(
+                requestDto.getExternalId(), memberid
+        );
+
+        if (!duplicated.isEmpty()) {
+            throw new IllegalArgumentException("이미 등록된 콘텐츠입니다.");
+        }
+
         Content content = new Content(
                 member,
                 requestDto.getExternalId(),

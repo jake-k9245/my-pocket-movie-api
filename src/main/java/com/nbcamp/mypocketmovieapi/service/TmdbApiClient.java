@@ -1,5 +1,6 @@
-package com.nbcamp.mypocketmovieapi.dto.content;
+package com.nbcamp.mypocketmovieapi.service;
 
+import com.nbcamp.mypocketmovieapi.dto.content.ContentDetailList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
