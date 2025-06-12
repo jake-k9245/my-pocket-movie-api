@@ -9,6 +9,7 @@ import com.nbcamp.mypocketmovieapi.exception.member.DuplicateEmailException;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     // 회원가입
+    @PostMapping("/api/members")
     public CreatedMemberResponseDto createMember(String email, String rawPassword, String nickname){
 
         // 이메일 중복 확인?
@@ -36,9 +38,18 @@ public class MemberService {
     }
 
     // 로그인
+    @PostMapping("/api/members/login")
     public SignInResponseDto signIn(SignInRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
+
+        Member member = memberJpaRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."))
+        if(!passwordEncoder.matches(password, member.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.")
+        }
+
+        return new SignInResponseDto(member.getId(), member.getEmail(), member.getNickname());
     }
 
 
