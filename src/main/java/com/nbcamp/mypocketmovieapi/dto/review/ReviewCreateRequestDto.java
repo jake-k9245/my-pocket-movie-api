@@ -1,7 +1,6 @@
 package com.nbcamp.mypocketmovieapi.dto.review;
 
 
-
 import lombok.Getter;
 
 @Getter

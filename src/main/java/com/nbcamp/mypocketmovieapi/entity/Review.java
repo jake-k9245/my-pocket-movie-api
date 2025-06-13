@@ -1,6 +1,5 @@
 package com.nbcamp.mypocketmovieapi.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,7 +31,7 @@ public class Review extends BaseEntity {
     private Content content;
 
     @Column(nullable = false)
-    private Integer rating;
+    private int rating;
 
     // @Lob : 대용량 Text를 저장하는데 사용하는 annotation
     @Lob
@@ -40,11 +39,16 @@ public class Review extends BaseEntity {
 
     // Bulider Pattern 적용 Annotation
     @Builder
-    public Review(Member member, Content content, Integer rating, String text) {
+    public Review(Member member, Content content, int rating, String text) {
         this.member = member;
         this.content = content;
         this.rating = rating;
         this.text = text;
+    }
+
+    public void update(String text, int rating) {
+        this.text = text;
+        this.rating = rating;
     }
 
 }

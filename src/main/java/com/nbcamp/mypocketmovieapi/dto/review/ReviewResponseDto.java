@@ -9,7 +9,7 @@ public class ReviewResponseDto {
     private Long reviewId;
     private Long contentId;
     private Long memberId;
-    private Integer rating;
+    private int rating;
     private String text;
 
     public ReviewResponseDto(Review review) {

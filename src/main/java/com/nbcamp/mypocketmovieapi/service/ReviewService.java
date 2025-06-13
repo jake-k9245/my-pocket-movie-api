@@ -102,9 +102,9 @@ public class ReviewService {
             throw new RuntimeException("작성자만 리뷰를 수정할 수 있습니다.");
         }
 
-//        findReview.update(requestDto.getText(), requestDto.getRating());
+        findReview.update(requestDto.getText(), requestDto.getRating());
 
-        reviewRepository.save(findReview); // insert, update
+//        reviewRepository.save(findReview); // insert, update
     }
 
     public void deleteReview(Long memberId, Long reviewId) {
