@@ -59,51 +59,6 @@ public class ReviewService {
             reviewResponseDtoList.add(reviewResponseDto);
         }
         return reviewResponseDtoList;
+
     }
-
-    public ReviewResponseDto findById(Long reviewId) {
-        Review findReview = reviewRepository.findById(reviewId).orElseThrow(
-                () -> new RuntimeException("해당 리뷰를 찾을 수 없습니다.")
-        );
-        ReviewResponseDto reviewResponseDto = new ReviewResponseDto(findReview);
-        return reviewResponseDto;
-    }
-
-
-    @Transactional
-    public void updateReviews(Long memberId, Long reviewId, ReviewUpdateRequestDto requestDto) {
-        // 이 요청을 한 회원의 id = memberId
-        Member findMember = memberRepository.findById(memberId).orElseThrow(
-                () -> new RuntimeException("해당하는 멤버가 존재하지 않습니다.")
-        );
-
-        Review findReview = reviewRepository.findById(reviewId).orElseThrow(
-                () -> new RuntimeException("해당 리뷰를 찾을 수 없습니다.")
-        );
-
-        if (!Objects.equals(findMember.getId(), findReview.getMember().getId())) {
-            throw new RuntimeException("작성자만 리뷰를 수정할 수 있습니다.");
-        }
-        
-        findReview.update(requestDto.getText(), requestDto.getRating());
-
-//        reviewRepository.save(findReview); // insert, update
-    }
-
-    public void deleteReview(Long memberId, Long reviewId) {
-        Member findMember = memberRepository.findById(memberId).orElseThrow(
-                () -> new RuntimeException("해당하는 멤버가 존재하지 않습니다.")
-        );
-
-        Review findReview = reviewRepository.findById(reviewId).orElseThrow(
-                () -> new RuntimeException("해당 리뷰를 찾을 수 없습니다.")
-        );
-
-        if (!Objects.equals(findMember.getId(), findReview.getMember().getId())) {
-            throw new RuntimeException("작성자만 리뷰를 삭제할 수 있습니다.");
-        }
-
-        reviewRepository.delete(findReview);
-    }
-
 }

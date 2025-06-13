@@ -43,11 +43,11 @@ public class ReviewController {
         return reviewResponseDtoList;
     }
 
-    //Review 단건 조회 API
-    @GetMapping("/reviews/{reviewId}")
-    public ResponseEntity<ReviewResponseDto> findById(@PathVariable Long reviewId) {
-        ReviewResponseDto reviewResponseDto = reviewService.findById(reviewId);
-        return ResponseEntity.ok(reviewResponseDto);
+    //
+    @GetMapping("/contents/{contentId}}/reviews/{id}")
+    public ResponseEntity<ReviewResponseDto> findById(@PathVariable Long id) {
+
+
     }
 
 

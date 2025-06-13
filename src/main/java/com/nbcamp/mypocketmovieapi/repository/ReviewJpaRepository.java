@@ -10,5 +10,4 @@ public interface ReviewJpaRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByContent(Content content);
 
-//    Review findByContentWithId(Content content);
 }
