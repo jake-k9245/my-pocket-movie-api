@@ -92,7 +92,12 @@ public class MemberService {
 
 
     // 회원 탈퇴
-    public
+    public    void deleteMember(Long memberId) {
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("회원을 찾을 수 없습니다."));
 
+        memberJpaRepository.delete(member);
+    }
 
 }
+

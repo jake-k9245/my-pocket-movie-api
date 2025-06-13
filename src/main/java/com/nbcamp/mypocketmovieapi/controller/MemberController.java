@@ -1,18 +1,12 @@
 package com.nbcamp.mypocketmovieapi.controller;
 
-import com.nbcamp.mypocketmovieapi.dto.member.CreatedMemberRequestDto;
-import com.nbcamp.mypocketmovieapi.dto.member.CreatedMemberResponseDto;
-import com.nbcamp.mypocketmovieapi.dto.member.SignInRequestDto;
-import com.nbcamp.mypocketmovieapi.dto.member.SignInResponseDto;
+import com.nbcamp.mypocketmovieapi.dto.member.*;
 import com.nbcamp.mypocketmovieapi.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -56,6 +50,89 @@ public class MemberController {
                 "data", "로그아웃 완료되었습니다"
         ));
     }
+
+    @PostMapping("/me")
+    public ResponseEntity<?> getMemberInfo(HttpSession session) {
+        Long memberId = (Long)session.getAttribute("SigninMemberId");
+
+        if (memberId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "code", 401,
+                    "status", "UNAUTHORIZED",
+                    "data", "로그인이 되어있지 않습니다."
+            ));
+        }
+
+        MemberProfileDto profile = memberService.getMemberProfile(memberId);
+        return ResponseEntity.ok(Map.of(
+                "code", 200,
+                "status", "OK",
+                "data", profile
+        ));
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<?> updateMemberInfo(HttpSession session, @RequestBody UpdateMemberProfileDto updateMemberProfileDto) {
+        Long memberId = (Long)session.getAttribute("signinMemberId");
+
+        if (memberId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "code", 401,
+                    "status", "UNAUTHORIZED",
+                    "data", "로그인이 되어있지 않습니다."
+            ));
+        }
+
+        MemberProfileDto updatedProfile = memberService.updateMemberProfile(memberId, updateMemberProfileDto);
+        return ResponseEntity.ok(Map.of(
+                "code", 200,
+                "status", "OK",
+                "data", updatedProfile
+        ));
+    }
+
+    @PutMapping("/me/password")
+    public ResponseEntity<?> changeMemberPassword(HttpSession session, @RequestBody ChangeMemberPasswordDto changeMemberPasswordDto) {
+        Long memberId = (Long) session.getAttribute("signinMemberId");
+
+        if (memberId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "code", 401,
+                    "status", "UNAUTHORIZED",
+                    "data", "로그인이 되어있지 않습니다."
+            ));
+        }
+
+        memberService.changeMemberPassword(memberId, changeMemberPasswordDto);
+        return ResponseEntity.ok(Map.of(
+                "code", 200,
+                "status", "OK",
+                "data", "비밀번호 변경 완료되었습니다"
+        ));
+    }
+
+
+    @DeleteMapping("/me")
+    public ResponseEntity<?> deleteMember(HttpSession session) {
+        Long memberId = (Long) session.getAttribute("signinMemberId");
+
+        if (memberId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+                    "code", 401,
+                    "status", "UNAUTHORIZED",
+                    "data", "로그인이 되어있지 않습니다."
+            ));
+        }
+
+        memberService.deleteMember(memberId);
+        return ResponseEntity.ok(Map.of(
+                "code", 204,
+                "status", "NO_CONTENT"
+        ));
+
+    }
+
+
 
 
 }
