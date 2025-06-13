@@ -10,4 +10,5 @@ public interface ReviewJpaRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByContent(Content content); // select * from reivews where content_id = 1;
 
+//    Review findByContentWithId(Content content);
 }
