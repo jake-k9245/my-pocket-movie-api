@@ -1,6 +1,9 @@
 package com.nbcamp.mypocketmovieapi.service;
 
-import com.nbcamp.mypocketmovieapi.dto.content.*;
+import com.nbcamp.mypocketmovieapi.dto.content.ContentDetail;
+import com.nbcamp.mypocketmovieapi.dto.content.ContentDetailList;
+import com.nbcamp.mypocketmovieapi.dto.content.ContentRequestDto;
+import com.nbcamp.mypocketmovieapi.dto.content.ContentResponseDto;
 import com.nbcamp.mypocketmovieapi.entity.Content;
 import com.nbcamp.mypocketmovieapi.entity.Member;
 import com.nbcamp.mypocketmovieapi.repository.ContentJpaRepository;

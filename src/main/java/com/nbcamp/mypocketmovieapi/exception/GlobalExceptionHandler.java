@@ -1,5 +1,7 @@
-package com.nbcamp.mypocketmovieapi.exception.member;
+package com.nbcamp.mypocketmovieapi.exception;
 
+import com.nbcamp.mypocketmovieapi.exception.member.DuplicateEmailException;
+import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

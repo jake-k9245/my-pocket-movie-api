@@ -1,7 +1,10 @@
 package com.nbcamp.mypocketmovieapi.controller;
 
+import com.nbcamp.mypocketmovieapi.common.Const;
+import com.nbcamp.mypocketmovieapi.common.SigninMember;
 import com.nbcamp.mypocketmovieapi.dto.member.*;
 import com.nbcamp.mypocketmovieapi.service.MemberService;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +36,7 @@ public class MemberController {
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody SignInRequestDto request, HttpSession session) {
         SignInResponseDto response = memberService.signIn(request);
-        session.setAttribute("signinMemberId", response.getId());
+        session.setAttribute(Const.SIGNIN_USER, response.getId());
         return ResponseEntity.ok(Map.of(
                 "code", 200,
                 "status", "OK",
@@ -51,17 +54,8 @@ public class MemberController {
         ));
     }
 
-    @PostMapping("/me")
-    public ResponseEntity<?> getMemberInfo(HttpSession session) {
-        Long memberId = (Long)session.getAttribute("SigninMemberId");
-
-        if (memberId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
-                    "code", 401,
-                    "status", "UNAUTHORIZED",
-                    "data", "로그인이 되어있지 않습니다."
-            ));
-        }
+    @GetMapping("/me")
+    public ResponseEntity<?> getMemberInfo(@Parameter(hidden = true) @SigninMember Long memberId) { //  SigninArgumentResolver가 어노테이션 돌게 만들어줌!
 
         MemberProfileDto profile = memberService.getMemberProfile(memberId);
         return ResponseEntity.ok(Map.of(
@@ -72,16 +66,7 @@ public class MemberController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<?> updateMemberInfo(HttpSession session, @RequestBody UpdateMemberProfileDto updateMemberProfileDto) {
-        Long memberId = (Long)session.getAttribute("signinMemberId");
-
-        if (memberId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
-                    "code", 401,
-                    "status", "UNAUTHORIZED",
-                    "data", "로그인이 되어있지 않습니다."
-            ));
-        }
+    public ResponseEntity<?> updateMemberInfo(@Parameter(hidden = true) @SigninMember Long memberId, @RequestBody UpdateMemberProfileDto updateMemberProfileDto) {
 
         MemberProfileDto updatedProfile = memberService.updateMemberProfile(memberId, updateMemberProfileDto);
         return ResponseEntity.ok(Map.of(
@@ -91,17 +76,18 @@ public class MemberController {
         ));
     }
 
-    @PutMapping("/me/password")
-    public ResponseEntity<?> changeMemberPassword(HttpSession session, @RequestBody ChangeMemberPasswordDto changeMemberPasswordDto) {
-        Long memberId = (Long) session.getAttribute("signinMemberId");
+    @PatchMapping("/me/password")
+    public ResponseEntity<?> changeMemberPassword(@Parameter(hidden = true) @SigninMember Long memberId, @RequestBody ChangeMemberPasswordDto changeMemberPasswordDto) {
 
-        if (memberId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
-                    "code", 401,
-                    "status", "UNAUTHORIZED",
-                    "data", "로그인이 되어있지 않습니다."
-            ));
-        }
+
+        // AuthenticationInterceptor 에서 이걸 다 해주기때문에 컨트롤러에서 체크할 필요가 없어짐
+//        if (memberId == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
+//                    "code", 401,
+//                    "status", "UNAUTHORIZED",
+//                    "data", "로그인이 되어있지 않습니다."
+//            ));
+//        }
 
         memberService.changeMemberPassword(memberId, changeMemberPasswordDto);
         return ResponseEntity.ok(Map.of(
@@ -111,18 +97,8 @@ public class MemberController {
         ));
     }
 
-
     @DeleteMapping("/me")
-    public ResponseEntity<?> deleteMember(HttpSession session) {
-        Long memberId = (Long) session.getAttribute("signinMemberId");
-
-        if (memberId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
-                    "code", 401,
-                    "status", "UNAUTHORIZED",
-                    "data", "로그인이 되어있지 않습니다."
-            ));
-        }
+    public ResponseEntity<?> deleteMember(@Parameter(hidden = true) @SigninMember Long memberId) {
 
         memberService.deleteMember(memberId);
         return ResponseEntity.ok(Map.of(
@@ -131,8 +107,5 @@ public class MemberController {
         ));
 
     }
-
-
-
 
 }

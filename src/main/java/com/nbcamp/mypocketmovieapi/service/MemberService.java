@@ -8,7 +8,6 @@ import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +27,8 @@ public class MemberService {
 
         Member createdMember = new Member(email, encodedPassword, nickname);
         Member savedMember = memberJpaRepository.save(createdMember);
+
+        // 보통 필요없음
         return new CreatedMemberResponseDto(
                 savedMember.getId(),
                 savedMember.getEmail(),

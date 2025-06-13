@@ -3,7 +3,6 @@ package com.nbcamp.mypocketmovieapi.dto.content;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Getter;
 
-
 import java.time.LocalDate;
 
 @Getter

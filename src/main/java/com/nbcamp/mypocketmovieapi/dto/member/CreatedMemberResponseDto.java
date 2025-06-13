@@ -1,6 +1,5 @@
 package com.nbcamp.mypocketmovieapi.dto.member;
 
-import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
 @Getter
