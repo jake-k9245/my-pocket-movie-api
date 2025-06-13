@@ -18,7 +18,6 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     // 회원가입
-    @PostMapping("/api/members")
     public CreatedMemberResponseDto createMember(String email, String rawPassword, String nickname){
 
         // 이메일 중복 확인?
@@ -38,7 +37,7 @@ public class MemberService {
     }
 
     // 로그인
-    @PostMapping("/api/members/login")
+
     public SignInResponseDto signIn(SignInRequestDto requestDto) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
