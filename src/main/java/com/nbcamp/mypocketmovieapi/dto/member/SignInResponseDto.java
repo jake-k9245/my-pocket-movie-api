@@ -10,4 +10,10 @@ public class SignInResponseDto {
     private String nickname;
 
 
+    public SignInResponseDto(Long id, String email, String nickname) {
+        this.id = id;
+        this.email = email;
+        this.nickname = nickname;
+    }
+
 }
