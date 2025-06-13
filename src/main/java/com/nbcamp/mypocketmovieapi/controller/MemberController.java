@@ -2,6 +2,8 @@ package com.nbcamp.mypocketmovieapi.controller;
 
 import com.nbcamp.mypocketmovieapi.dto.member.CreatedMemberRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.member.CreatedMemberResponseDto;
+import com.nbcamp.mypocketmovieapi.dto.member.SignInRequestDto;
+import com.nbcamp.mypocketmovieapi.dto.member.SignInResponseDto;
 import com.nbcamp.mypocketmovieapi.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,17 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "code", 201,
                 "status", "CREATED",
+                "data", response
+        ));
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> signIn(@RequestBody SignInRequestDto request) {
+        SignInResponseDto response = memberService.signIn(request);
+
+        return ResponseEntity.ok(Map.of(
+                "code", 200,
+                "status", "OK",
                 "data", response
         ));
     }

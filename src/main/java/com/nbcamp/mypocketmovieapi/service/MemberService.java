@@ -44,9 +44,10 @@ public class MemberService {
         String password = requestDto.getPassword();
 
         Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."))
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+
         if(!passwordEncoder.matches(password, member.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.")
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
         return new SignInResponseDto(member.getId(), member.getEmail(), member.getNickname());
