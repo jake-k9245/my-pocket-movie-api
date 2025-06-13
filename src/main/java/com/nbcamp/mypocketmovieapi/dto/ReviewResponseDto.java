@@ -7,14 +7,14 @@ import lombok.Getter;
 public class ReviewResponseDto {
     private Long reviewId;
     private Long contentId;
-    private String email;
-    private int rating;
+    private Long memberId;
+    private Integer rating;
     private String text;
 
     public ReviewResponseDto(Review review) {
         this.reviewId = review.getId();
         this.contentId = review.getContent().getId();
-        this.email = review.getMember().getEmail();
+        this.memberId = review.getMember().getId();
         this.rating = review.getRating();
         this.text = review.getText();
     }
