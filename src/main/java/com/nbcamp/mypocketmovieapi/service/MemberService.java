@@ -2,6 +2,7 @@ package com.nbcamp.mypocketmovieapi.service;
 
 import com.nbcamp.mypocketmovieapi.config.PasswordEncoder;
 import com.nbcamp.mypocketmovieapi.dto.member.CreatedMemberResponseDto;
+import com.nbcamp.mypocketmovieapi.dto.member.MemberProfileDto;
 import com.nbcamp.mypocketmovieapi.dto.member.SignInRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.member.SignInResponseDto;
 import com.nbcamp.mypocketmovieapi.entity.Member;
@@ -57,6 +58,7 @@ public class MemberService {
 
 
     // 사용자 정보 조회
+    public MemberProfileDto
 
 
     // 사용자 정보 수정
