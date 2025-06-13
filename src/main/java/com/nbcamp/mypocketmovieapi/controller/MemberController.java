@@ -1,5 +1,7 @@
 package com.nbcamp.mypocketmovieapi.controller;
 
+import com.nbcamp.mypocketmovieapi.common.CommonCode;
+import com.nbcamp.mypocketmovieapi.common.CommonResponse;
 import com.nbcamp.mypocketmovieapi.common.Const;
 import com.nbcamp.mypocketmovieapi.common.SigninMember;
 import com.nbcamp.mypocketmovieapi.dto.member.*;
@@ -20,28 +22,23 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<?> signup(@RequestBody CreatedMemberRequestDto request) {
+    public ResponseEntity<CommonResponse<CreatedMemberResponseDto>> signup(@RequestBody CreatedMemberRequestDto request) {
         CreatedMemberResponseDto response = memberService.createMember(
                 request.getEmail(),
                 request.getPassword(),
                 request.getNickname()
         );
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                "code", 201,
-                "status", "CREATED",
-                "data", response
-        ));
+        // static 이니까 바로 바로 부를 수 있음
+        CommonResponse<CreatedMemberResponseDto> commonResponse = CommonResponse.success(CommonCode.SUCCESS_SIGNUP, response);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(commonResponse);
     }
 
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody SignInRequestDto request, HttpSession session) {
         SignInResponseDto response = memberService.signIn(request);
         session.setAttribute(Const.SIGNIN_USER, response.getId());
-        return ResponseEntity.ok(Map.of(
-                "code", 200,
-                "status", "OK",
-                "data", response
-        ));
+        return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS_SIGNIN, response));
     }
 
     @PostMapping("/logout")
@@ -55,14 +52,12 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getMemberInfo(@Parameter(hidden = true) @SigninMember Long memberId) { //  SigninArgumentResolver가 어노테이션 돌게 만들어줌!
+    public ResponseEntity<CommonResponse<MemberProfileDto>> getMemberInfo(@Parameter(hidden = true) @SigninMember Long memberId) { //  SigninArgumentResolver가 어노테이션 돌게 만들어줌!
 
         MemberProfileDto profile = memberService.getMemberProfile(memberId);
-        return ResponseEntity.ok(Map.of(
-                "code", 200,
-                "status", "OK",
-                "data", profile
-        ));
+        CommonResponse<MemberProfileDto> commonResponse = CommonResponse.success(CommonCode.SUCCESS, profile);
+
+        return ResponseEntity.ok(commonResponse);
     }
 
     @PutMapping("/me")
