@@ -1,8 +1,8 @@
 package com.nbcamp.mypocketmovieapi.controller;
 
-import com.nbcamp.mypocketmovieapi.dto.CommentResponseDto;
-import com.nbcamp.mypocketmovieapi.dto.SaveCommentRequestDto;
-import com.nbcamp.mypocketmovieapi.dto.UpdateCommentRequestDto;
+import com.nbcamp.mypocketmovieapi.dto.review.CommentResponseDto;
+import com.nbcamp.mypocketmovieapi.dto.review.SaveCommentRequestDto;
+import com.nbcamp.mypocketmovieapi.dto.review.UpdateCommentRequestDto;
 import com.nbcamp.mypocketmovieapi.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

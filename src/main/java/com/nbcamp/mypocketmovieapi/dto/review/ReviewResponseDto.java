@@ -1,4 +1,5 @@
-package com.nbcamp.mypocketmovieapi.dto;
+package com.nbcamp.mypocketmovieapi.dto.review;
+
 
 import com.nbcamp.mypocketmovieapi.entity.Review;
 import lombok.Getter;
@@ -8,7 +9,7 @@ public class ReviewResponseDto {
     private Long reviewId;
     private Long contentId;
     private Long memberId;
-    private Integer rating;
+    private int rating;
     private String text;
 
     public ReviewResponseDto(Review review) {
