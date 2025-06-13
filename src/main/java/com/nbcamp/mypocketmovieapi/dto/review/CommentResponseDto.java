@@ -1,4 +1,4 @@
-package com.nbcamp.mypocketmovieapi.dto;
+package com.nbcamp.mypocketmovieapi.dto.review;
 
 import com.nbcamp.mypocketmovieapi.entity.Comment;
 import lombok.Getter;

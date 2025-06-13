@@ -1,9 +1,10 @@
 package com.nbcamp.mypocketmovieapi.service;
 
 
-import com.nbcamp.mypocketmovieapi.dto.ReviewCreateRequestDto;
-import com.nbcamp.mypocketmovieapi.dto.ReviewResponseDto;
-import com.nbcamp.mypocketmovieapi.dto.ReviewUpdateRequestDto;
+
+import com.nbcamp.mypocketmovieapi.dto.review.ReviewCreateRequestDto;
+import com.nbcamp.mypocketmovieapi.dto.review.ReviewResponseDto;
+import com.nbcamp.mypocketmovieapi.dto.review.ReviewUpdateRequestDto;
 import com.nbcamp.mypocketmovieapi.entity.Content;
 import com.nbcamp.mypocketmovieapi.entity.Member;
 import com.nbcamp.mypocketmovieapi.entity.Review;
@@ -84,12 +85,9 @@ public class ReviewService {
         );
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(findReview);
         return reviewResponseDto;
-        Review findReview = reviewRepository.findBy
     }
 
-
-    @T
-
+    @Transactional
     public void updateReviews(Long memberId, Long reviewId, ReviewUpdateRequestDto requestDto) {
         // 이 요청을 한 회원의 id = memberId
         Member findMember = memberRepository.findById(memberId).orElseThrow(
@@ -104,9 +102,9 @@ public class ReviewService {
             throw new RuntimeException("작성자만 리뷰를 수정할 수 있습니다.");
         }
 
-        findReview.update(requestDto.getText(), requestDto.getRating());
+//        findReview.update(requestDto.getText(), requestDto.getRating());
 
-//        reviewRepository.save(findReview); // insert, update
+        reviewRepository.save(findReview); // insert, update
     }
 
     public void deleteReview(Long memberId, Long reviewId) {
