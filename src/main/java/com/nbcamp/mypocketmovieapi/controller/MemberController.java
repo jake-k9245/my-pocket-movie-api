@@ -5,6 +5,7 @@ import com.nbcamp.mypocketmovieapi.dto.member.CreatedMemberResponseDto;
 import com.nbcamp.mypocketmovieapi.dto.member.SignInRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.member.SignInResponseDto;
 import com.nbcamp.mypocketmovieapi.service.MemberService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,13 +37,25 @@ public class MemberController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@RequestBody SignInRequestDto request) {
+    public ResponseEntity<?> signIn(@RequestBody SignInRequestDto request, HttpSession session) {
         SignInResponseDto response = memberService.signIn(request);
-
+        session.setAttribute("signinMemberId", response.getId());
         return ResponseEntity.ok(Map.of(
                 "code", 200,
                 "status", "OK",
                 "data", response
         ));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok(Map.of(
+                "code", 200,
+                "status", "OK",
+                "data", "로그아웃 완료되었습니다"
+        ));
+    }
+
+
 }
