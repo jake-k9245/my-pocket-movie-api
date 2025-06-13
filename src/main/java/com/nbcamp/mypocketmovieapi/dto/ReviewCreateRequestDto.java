@@ -5,14 +5,9 @@ import lombok.Getter;
 
 @Getter
 public class ReviewCreateRequestDto {
+//    { "rating": 1, "text": "리뷰 Good" }
 
-    private final Integer Rating;
-    private final String text;
-
-    public ReviewCreateRequestDto(Integer rating, String text) {
-
-        this.Rating = rating;
-        this.text = text;
-    }
+    private int rating;
+    private String text;
 
 }

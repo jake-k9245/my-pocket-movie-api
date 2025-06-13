@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ReviewJpaRepository extends JpaRepository<Review, Long> {
 
-    List<Review> findByContent(Content content);
+    List<Review> findByContent(Content content); // select * from reivews where content_id = 1;
 
 }
