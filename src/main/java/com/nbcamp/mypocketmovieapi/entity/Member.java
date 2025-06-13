@@ -53,4 +53,10 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
     }
 
+
+    // 세터 대신 닉네임 바꾸는 메서드
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
 }
