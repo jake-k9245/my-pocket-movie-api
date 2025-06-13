@@ -24,6 +24,7 @@ CREATE TABLE contents (
                           poster_path VARCHAR(512),
                           overview TEXT,
                           release_date DATE,
+                          popularity DECIMAL(5,3),
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                           FOREIGN KEY (member_id) REFERENCES members(id)

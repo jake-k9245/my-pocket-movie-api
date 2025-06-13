@@ -6,8 +6,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @Entity
 @Table(name = "members")
@@ -51,6 +49,17 @@ public class Member extends BaseEntity {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+    }
+
+
+    // 세터 대신 닉네임 바꾸는 메서드
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    // 세터 대신 비밀번호 바꾸는 메서드
+    public void updatePassword(String password) {
+        this.password = password;
     }
 
 }
