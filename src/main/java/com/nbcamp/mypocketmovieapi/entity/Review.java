@@ -31,7 +31,7 @@ public class Review extends BaseEntity {
     private Content content;
 
     @Column(nullable = false)
-    private Integer rating;
+    private int rating;
 
     // @Lob : 대용량 Text를 저장하는데 사용하는 annotation
     @Lob
@@ -44,6 +44,11 @@ public class Review extends BaseEntity {
         this.content = content;
         this.rating = rating;
         this.text = text;
+    }
+
+    public void update(String text, int rating) {
+        this.text = text;
+        this.rating = rating;
     }
 
 }
