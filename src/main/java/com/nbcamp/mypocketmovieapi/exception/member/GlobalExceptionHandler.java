@@ -17,4 +17,14 @@ public class GlobalExceptionHandler extends RuntimeException {
                 "message", e.getMessage()
         ));
     }
+
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<?> handleMemberNotFound(MemberNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                "code", 404,
+                "status", "NOT_FOUND",
+                "data", e.getMessage()
+        ));
+    }
+
 }

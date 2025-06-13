@@ -1,11 +1,10 @@
 package com.nbcamp.mypocketmovieapi.service;
 
 import com.nbcamp.mypocketmovieapi.config.PasswordEncoder;
-import com.nbcamp.mypocketmovieapi.dto.member.CreatedMemberResponseDto;
-import com.nbcamp.mypocketmovieapi.dto.member.SignInRequestDto;
-import com.nbcamp.mypocketmovieapi.dto.member.SignInResponseDto;
+import com.nbcamp.mypocketmovieapi.dto.member.*;
 import com.nbcamp.mypocketmovieapi.entity.Member;
 import com.nbcamp.mypocketmovieapi.exception.member.DuplicateEmailException;
+import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,7 @@ public class MemberService {
         String password = requestDto.getPassword();
 
         Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+                .orElseThrow(() -> new MemberNotFoundException("이메일이 올바르지 않습니다."));
 
         if(!passwordEncoder.matches(password, member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -57,12 +56,48 @@ public class MemberService {
 
 
     // 사용자 정보 조회
+    public MemberProfileDto getMemberProfile(Long memberId) {
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("회원을 찾을 수 없습니다."));
+        return new MemberProfileDto(member);
+    }
 
 
     // 사용자 정보 수정
+    public MemberProfileDto  updateMemberProfile(Long memberId, UpdateMemberProfileDto updateMemberProfileDto) {
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("회원을 찾을 수 없습니다."));
+
+        member.updateNickname(updateMemberProfileDto.getNickname());
+        memberJpaRepository.save(member);
+
+        return new MemberProfileDto(member);
+    }
+
+
+    // 비밀번호 변경
+    public void changeMemberPassword(Long memberId, ChangeMemberPasswordDto changeMemberPasswordDto) {
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow( () -> new MemberNotFoundException("회원을 찾을 수 없습니다."));
+
+        if (!passwordEncoder.matches(changeMemberPasswordDto.getOldPassword(), member.getPassword())){
+            throw new IllegalArgumentException(" 기존 비밀번호가 일치하지 않습니다.");
+        }
+
+        member.updatePassword(passwordEncoder.encode(changeMemberPasswordDto.getNewPassword()));
+        memberJpaRepository.save(member);
+
+    }
+
 
 
     // 회원 탈퇴
+    public    void deleteMember(Long memberId) {
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException("회원을 찾을 수 없습니다."));
 
+        memberJpaRepository.delete(member);
+    }
 
 }
+
