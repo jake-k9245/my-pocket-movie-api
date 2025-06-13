@@ -76,10 +76,23 @@ public class MemberService {
 
 
     // 비밀번호 변경
+    public void changeMemberPassword(Long memberId, ChangeMemberPasswordDto changeMemberPasswordDto) {
+        Member member = memberJpaRepository.findById(memberId)
+                .orElseThrow( () -> new MemberNotFoundException("회원을 찾을 수 없습니다."));
+
+        if (!passwordEncoder.matches(changeMemberPasswordDto.getOldPassword(), member.getPassword())){
+            throw new IllegalArgumentException(" 기존 비밀번호가 일치하지 않습니다.");
+        }
+
+        member.updatePassword(passwordEncoder.encode(changeMemberPasswordDto.getNewPassword()));
+        memberJpaRepository.save(member);
+
+    }
 
 
 
     // 회원 탈퇴
+    public
 
 
 }

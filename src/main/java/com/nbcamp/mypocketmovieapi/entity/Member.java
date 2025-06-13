@@ -59,4 +59,9 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
     }
 
+    // 세터 대신 비밀번호 바꾸는 메서드
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
 }
