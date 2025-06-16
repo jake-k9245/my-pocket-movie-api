@@ -1,13 +1,15 @@
 package com.nbcamp.mypocketmovieapi.service;
 
-
-
+import com.nbcamp.mypocketmovieapi.common.CommonCode;
 import com.nbcamp.mypocketmovieapi.dto.review.ReviewCreateRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.review.ReviewResponseDto;
 import com.nbcamp.mypocketmovieapi.dto.review.ReviewUpdateRequestDto;
 import com.nbcamp.mypocketmovieapi.entity.Content;
 import com.nbcamp.mypocketmovieapi.entity.Member;
 import com.nbcamp.mypocketmovieapi.entity.Review;
+import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
+import com.nbcamp.mypocketmovieapi.exception.review.ReviewNotFoundException;
+import com.nbcamp.mypocketmovieapi.exception.review.UnAuthorizedReviewException;
 import com.nbcamp.mypocketmovieapi.repository.ContentJpaRepository;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import com.nbcamp.mypocketmovieapi.repository.ReviewJpaRepository;
@@ -28,10 +30,9 @@ public class ReviewService {
 
     public ReviewResponseDto save(Long contentId, Long memberId, ReviewCreateRequestDto requestDto) {
 
-        Member findMember = memberRepository.findById(memberId).orElseThrow(
-                () -> new RuntimeException("해당하는 멤버가 존재하지 않습니다.")
-        );
+        Member findMember = getFindMember(memberId);
 
+        // Content 담당자가 완료 후 처리
         Content findContent = contentRepository.findById(contentId).orElseThrow(
                 () -> new RuntimeException("해당하는 콘텐츠가 존재하지 않습니다.")
         );
@@ -59,7 +60,7 @@ public class ReviewService {
         return reviewResponseDtoList;
     }
 
-   public List<ReviewResponseDto> getReviewsBy(Long contentId) {
+    public List<ReviewResponseDto> getReviewsBy(Long contentId) {
 
         // 리뷰를 작성한 콘텐츠 정보 조회 select * from contents where id = 1; , 기본 제공 메서드
         Content content = contentRepository.findById(contentId).orElseThrow(
@@ -81,7 +82,7 @@ public class ReviewService {
 
     public ReviewResponseDto findById(Long reviewId) {
         Review findReview = reviewRepository.findById(reviewId).orElseThrow(
-                () -> new RuntimeException("해당 리뷰를 찾을 수 없습니다.")
+                () -> new ReviewNotFoundException(CommonCode.FAIL_REVIEW_NOT_FOUND)
         );
         ReviewResponseDto reviewResponseDto = new ReviewResponseDto(findReview);
         return reviewResponseDto;
@@ -90,16 +91,14 @@ public class ReviewService {
     @Transactional
     public void updateReviews(Long memberId, Long reviewId, ReviewUpdateRequestDto requestDto) {
         // 이 요청을 한 회원의 id = memberId
-        Member findMember = memberRepository.findById(memberId).orElseThrow(
-                () -> new RuntimeException("해당하는 멤버가 존재하지 않습니다.")
-        );
+        Member findMember = getFindMember(memberId);
 
         Review findReview = reviewRepository.findById(reviewId).orElseThrow(
-                () -> new RuntimeException("해당 리뷰를 찾을 수 없습니다.")
+                () -> new ReviewNotFoundException(CommonCode.FAIL_REVIEW_NOT_FOUND)
         );
 
         if (!Objects.equals(findMember.getId(), findReview.getMember().getId())) {
-            throw new RuntimeException("작성자만 리뷰를 수정할 수 있습니다.");
+            throw new UnAuthorizedReviewException(CommonCode.FAIL_UNAUTHORIZED_REVIEW_MODIFICATION);
         }
 
         findReview.update(requestDto.getText(), requestDto.getRating());
@@ -108,19 +107,23 @@ public class ReviewService {
     }
 
     public void deleteReview(Long memberId, Long reviewId) {
-        Member findMember = memberRepository.findById(memberId).orElseThrow(
-                () -> new RuntimeException("해당하는 멤버가 존재하지 않습니다.")
-        );
+        Member findMember = getFindMember(memberId);
 
         Review findReview = reviewRepository.findById(reviewId).orElseThrow(
-                () -> new RuntimeException("해당 리뷰를 찾을 수 없습니다.")
+                () -> new ReviewNotFoundException(CommonCode.FAIL_REVIEW_NOT_FOUND)
         );
 
         if (!Objects.equals(findMember.getId(), findReview.getMember().getId())) {
-            throw new RuntimeException("작성자만 리뷰를 삭제할 수 있습니다.");
+            throw new UnAuthorizedReviewException(CommonCode.FAIL_UNAUTHORIZED_REVIEW_DELETION);
         }
 
         reviewRepository.delete(findReview);
+    }
+
+    private Member getFindMember(Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(
+                () -> new MemberNotFoundException(CommonCode.FAIL_MEMBER_NOT_FOUND)
+        );
     }
 
 }

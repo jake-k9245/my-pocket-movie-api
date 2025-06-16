@@ -5,6 +5,8 @@ import com.nbcamp.mypocketmovieapi.exception.member.DuplicateEmailException;
 import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
 import com.nbcamp.mypocketmovieapi.exception.member.SignInInvalidPassword;
 import com.nbcamp.mypocketmovieapi.exception.member.UpdateMismatchPassword;
+import com.nbcamp.mypocketmovieapi.exception.review.ReviewNotFoundException;
+import com.nbcamp.mypocketmovieapi.exception.review.UnAuthorizedReviewException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +14,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends RuntimeException {
+
+    @ExceptionHandler(UnAuthorizedReviewException.class)
+    public ResponseEntity<CommonResponse<Void>> handleReviewUnAuthorized(UnAuthorizedReviewException e) {
+
+        CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(commonResponse);
+    }
+
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public ResponseEntity<CommonResponse<Void>> handleReviewNotFound(ReviewNotFoundException e) {
+
+        CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(commonResponse);
+    }
 
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<CommonResponse<Void>> handleDuplicateEmail(DuplicateEmailException e) {
