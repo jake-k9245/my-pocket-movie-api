@@ -8,6 +8,10 @@ import com.nbcamp.mypocketmovieapi.dto.review.SaveCommentRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.review.UpdateCommentRequestDto;
 import com.nbcamp.mypocketmovieapi.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,10 +57,13 @@ public class CommentController {
         return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS));
     }
 
-    // GET http://localhost:8080/api/reviews/{reviewId}/comments
+    // GET http://localhost:8080/api/reviews/{reviewId}/comments?page=0&size=10&sort=정렬기준
     @GetMapping("/api/reviews/{reviewId}/comments")
-    public ResponseEntity<CommonResponse<List<CommentResponseDto>>> getComments(@PathVariable Long reviewId) {
-       List<CommentResponseDto> responseDtoList = commentService.getComments(reviewId);
+    public ResponseEntity<CommonResponse<Page<CommentResponseDto>>> getComments(
+            @PathVariable Long reviewId,
+            @ParameterObject @PageableDefault(page = 0, size = 10, sort = {"createdAt"}) Pageable pageable
+    ) {
+        Page<CommentResponseDto> responseDtoList = commentService.getComments(reviewId, pageable);
         return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS, responseDtoList));
     }
 

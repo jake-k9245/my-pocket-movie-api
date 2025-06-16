@@ -15,10 +15,10 @@ import com.nbcamp.mypocketmovieapi.repository.CommentJpaRepository;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import com.nbcamp.mypocketmovieapi.repository.ReviewJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -58,17 +58,10 @@ public class CommentService {
         commentJpaRepository.delete(comment);
     }
 
-    public List<CommentResponseDto> getComments(Long reviewId) {
+    public Page<CommentResponseDto> getComments(Long reviewId, Pageable pageable) {
         Review review = getFindReview(reviewId);
-        List<CommentResponseDto> responseDtoList = new ArrayList<>();
-
-        List<Comment> commentList = commentJpaRepository.findByReview(review);
-        for (Comment comment : commentList) {
-            CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
-            responseDtoList.add(commentResponseDto);
-        }
-
-        return responseDtoList;
+        Page<Comment> commentPage = commentJpaRepository.findByReview(review, pageable);
+        return commentPage.map(CommentResponseDto::new);
     }
 
     private Review getFindReview(Long reviewId) {
