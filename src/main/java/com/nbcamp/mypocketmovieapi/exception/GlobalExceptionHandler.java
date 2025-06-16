@@ -1,6 +1,8 @@
 package com.nbcamp.mypocketmovieapi.exception;
 
 import com.nbcamp.mypocketmovieapi.common.CommonResponse;
+import com.nbcamp.mypocketmovieapi.exception.comment.CommentNotFoundException;
+import com.nbcamp.mypocketmovieapi.exception.comment.UnAuthorizedCommentException;
 import com.nbcamp.mypocketmovieapi.exception.content.ContentNotFoundException;
 import com.nbcamp.mypocketmovieapi.exception.content.DuplicateContentException;
 import com.nbcamp.mypocketmovieapi.exception.content.UnAuthorizedContentException;
@@ -17,6 +19,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends RuntimeException {
+
+    @ExceptionHandler(UnAuthorizedCommentException.class)
+    public ResponseEntity<CommonResponse<Void>> handleCommentUnAuthorized(UnAuthorizedCommentException e) {
+
+        CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(commonResponse);
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<CommonResponse<Void>> handleCommentNotFound(CommentNotFoundException e) {
+
+        CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(commonResponse);
+    }
 
     @ExceptionHandler(DuplicateContentException.class)
     public ResponseEntity<CommonResponse<Void>> handleContentDuplicate(DuplicateContentException e) {

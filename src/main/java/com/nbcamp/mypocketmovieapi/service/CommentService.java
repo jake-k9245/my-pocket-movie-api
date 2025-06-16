@@ -1,11 +1,16 @@
 package com.nbcamp.mypocketmovieapi.service;
 
+import com.nbcamp.mypocketmovieapi.common.CommonCode;
 import com.nbcamp.mypocketmovieapi.dto.review.CommentResponseDto;
 import com.nbcamp.mypocketmovieapi.dto.review.SaveCommentRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.review.UpdateCommentRequestDto;
 import com.nbcamp.mypocketmovieapi.entity.Comment;
 import com.nbcamp.mypocketmovieapi.entity.Member;
 import com.nbcamp.mypocketmovieapi.entity.Review;
+import com.nbcamp.mypocketmovieapi.exception.comment.CommentNotFoundException;
+import com.nbcamp.mypocketmovieapi.exception.comment.UnAuthorizedCommentException;
+import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
+import com.nbcamp.mypocketmovieapi.exception.review.ReviewNotFoundException;
 import com.nbcamp.mypocketmovieapi.repository.CommentJpaRepository;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import com.nbcamp.mypocketmovieapi.repository.ReviewJpaRepository;
@@ -23,68 +28,38 @@ public class CommentService {
     private final ReviewJpaRepository reviewJpaRepository;
     private final CommentJpaRepository commentJpaRepository;
 
-    // memberId, reviewId, 저장할 데이터(text)
     public void saveComments(Long memberId, Long reviewId, SaveCommentRequestDto requestDto) {
-        // 작성하려는 Member가 존재하는지 확인 및 Entity 객체 가져오기, MemberJpaRepository findById() => select * from members where id = ?
-        Member member =  memberJpaRepository.findById(memberId).orElseThrow(
-                () -> new RuntimeException("해당하는 멤버가 존재하지 않습니다.")
-        );
-
-        // 작성대상인 Review가 존재하는지 확인 및 Entity 객체 가져오기, ReviewJpaRepository findById() => select * from reviews where id = ?
-        Review review = reviewJpaRepository.findById(reviewId).orElseThrow(
-                () -> new RuntimeException("해당하는 리뷰가 존재하지 않습니다.")
-        );
-
-        // Comment Entity 객체를 생성 (Member, Reivew, 저장데이터(requestDto)) => Comment 객체 1개가 곧 테이블의 1row, 엑셀의 1줄(행)
+        Member member = getFindMember(memberId);
+        Review review = getFindReview(reviewId);
         Comment comment = Comment.builder().member(member).review(review).text(requestDto.getText()).build();
-
-        // CommentJpaRepository => 데이터베이스에 접근해서 우리 대신 SQL을 작성 및 excute 하는 객체
-        // CommentJpaRepository save(Comment Entity의 객체) 라는 메서드가 존재 (insert=저장)
-        commentJpaRepository.save(comment); // => insert into
+        commentJpaRepository.save(comment);
     }
 
     public void updateComments(Long memberId, Long commentId, UpdateCommentRequestDto requestDto) {
-        // 수정 하려는 회원의 정보를 조회
-        Member member =  memberJpaRepository.findById(memberId).orElseThrow(
-                () -> new RuntimeException("해당하는 멤버가 존재하지 않습니다.")
-        );
-        // 수정 하려는 댓글의 정보를 조회
-        Comment comment = commentJpaRepository.findById(commentId).orElseThrow(
-                () -> new RuntimeException("해당하는 댓글이 존재하지 않습니다.")
-        );
-        // 수정 하려는 회원의 id와 수정 하려는 댓글을 작성한 회원의 id가 일치하는 경우에만 수정 가능
+        Member member = getFindMember(memberId);
+        Comment comment = getFindComment(commentId);
+
         if(!Objects.equals(member.getId(), comment.getMember().getId())) {
-            // 수정 하려는 회원의 id와 수정 하려는 댓글을 작성한 회원의 id가 일치하지 않는 경우에 실행됨.
-            throw new RuntimeException("댓글을 작성한 회원만 수정이 가능합니다.");
+            throw new UnAuthorizedCommentException(CommonCode.FAIL_UNAUTHORIZED_COMMENT_MODIFICATION);
         }
-        // 수정 진행
+
         comment.updateText(requestDto.getText());
-        commentJpaRepository.save(comment); // insert & update (새로 생성되는 entity는 insert, DB에서 조회해온 entity는 update)
+        commentJpaRepository.save(comment);
     }
 
     public void deleteComments(Long memberId, Long commentId) {
-        // 삭제 하려는 회원의 정보를 조회
-        Member member =  memberJpaRepository.findById(memberId).orElseThrow(
-                () -> new RuntimeException("해당하는 멤버가 존재하지 않습니다.")
-        );
-        // 삭제 하려는 댓글의 정보를 조회
-        Comment comment = commentJpaRepository.findById(commentId).orElseThrow(
-                () -> new RuntimeException("해당하는 댓글이 존재하지 않습니다.")
-        );
-        // 삭제 하려는 회원의 id와 삭제 하려는 댓글을 작성한 회원의 id가 일치하는 경우에만 삭제 가능
+        Member member = getFindMember(memberId);
+        Comment comment = getFindComment(commentId);
+
         if(!Objects.equals(member.getId(), comment.getMember().getId())) {
-            // 삭제 하려는 회원의 id와 삭제 하려는 댓글을 작성한 회원의 id가 일치하지 않는 경우에 실행됨.
-            throw new RuntimeException("댓글을 작성한 회원만 수정이 가능합니다.");
+            throw new UnAuthorizedCommentException(CommonCode.FAIL_UNAUTHORIZED_COMMENT_DELETION);
         }
-        commentJpaRepository.delete(comment); // delete
+
+        commentJpaRepository.delete(comment);
     }
 
     public List<CommentResponseDto> getComments(Long reviewId) {
-        // 댓글이 달려있는 리뷰 정보 조회
-        Review review = reviewJpaRepository.findById(reviewId).orElseThrow(
-                () -> new RuntimeException("해당하는 리뷰가 존재하지 않습니다.")
-        );
-        // 해당 리뷰에 달린 모든 댓글 조회
+        Review review = getFindReview(reviewId);
         List<CommentResponseDto> responseDtoList = new ArrayList<>();
 
         List<Comment> commentList = commentJpaRepository.findByReview(review);
@@ -95,4 +70,23 @@ public class CommentService {
 
         return responseDtoList;
     }
+
+    private Review getFindReview(Long reviewId) {
+        return reviewJpaRepository.findById(reviewId).orElseThrow(
+                () -> new ReviewNotFoundException(CommonCode.FAIL_REVIEW_NOT_FOUND)
+        );
+    }
+
+    private Member getFindMember(Long memberId) {
+        return memberJpaRepository.findById(memberId).orElseThrow(
+                () -> new MemberNotFoundException(CommonCode.FAIL_MEMBER_NOT_FOUND)
+        );
+    }
+
+    private Comment getFindComment(Long commentId) {
+        return commentJpaRepository.findById(commentId).orElseThrow(
+                () -> new CommentNotFoundException(CommonCode.FAIL_COMMENT_NOT_FOUND)
+        );
+    }
+
 }
