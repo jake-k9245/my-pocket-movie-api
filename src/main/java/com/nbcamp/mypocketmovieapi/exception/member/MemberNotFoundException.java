@@ -12,4 +12,5 @@ public class MemberNotFoundException extends RuntimeException {
     public CommonCode getCommonCode() {
         return this.commonCode;
     }
+
 }

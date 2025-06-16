@@ -12,4 +12,5 @@ public class SignInInvalidPassword extends RuntimeException {
     public CommonCode getCommonCode() {
         return commonCode;
     }
+
 }

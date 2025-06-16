@@ -12,4 +12,5 @@ public class DuplicateEmailException extends RuntimeException {
     public CommonCode getCommonCode() {
         return this.commonCode;
     }
+
 }

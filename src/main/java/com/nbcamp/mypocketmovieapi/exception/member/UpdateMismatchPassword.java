@@ -12,4 +12,5 @@ public class UpdateMismatchPassword extends RuntimeException {
     public CommonCode getCommonCode() {
         return commonCode;
     }
+
 }
