@@ -13,6 +13,8 @@ public enum CommonCode { // 우리는 크기가 안크니까 에러와 성공을
     FAIL_DUPLICATE_EMAIL(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.name(), "이미 사용 중인 이메일입니다."),
     FAIL_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(), "회원을 찾을 수 없습니다."),
     FAIL_INVALID_EMAIL(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(), "이메일이 올바르지 않습니다."),
+    FAIL_SIGNIN_INVALID_PASSWORD(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name(), "비밀번호가 올바르지 않습니다."),
+    FAIL_UPDATE_MISMATCH_PASSWORD(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), "기존 비밀번호가 올바르지 않습니다."),
 
     // Content
 
