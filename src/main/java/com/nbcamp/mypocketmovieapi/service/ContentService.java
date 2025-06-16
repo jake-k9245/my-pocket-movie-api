@@ -1,17 +1,20 @@
 package com.nbcamp.mypocketmovieapi.service;
 
-import com.nbcamp.mypocketmovieapi.dto.content.ContentDetail;
-import com.nbcamp.mypocketmovieapi.dto.content.ContentDetailList;
-import com.nbcamp.mypocketmovieapi.dto.content.ContentRequestDto;
-import com.nbcamp.mypocketmovieapi.dto.content.ContentResponseDto;
+import com.nbcamp.mypocketmovieapi.common.CommonCode;
+import com.nbcamp.mypocketmovieapi.dto.content.*;
 import com.nbcamp.mypocketmovieapi.entity.Content;
 import com.nbcamp.mypocketmovieapi.entity.Member;
+import com.nbcamp.mypocketmovieapi.exception.content.ContentNotFoundException;
+import com.nbcamp.mypocketmovieapi.exception.content.DuplicateContentException;
+import com.nbcamp.mypocketmovieapi.exception.content.UnAuthorizedContentException;
+import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
 import com.nbcamp.mypocketmovieapi.repository.ContentJpaRepository;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -41,18 +44,16 @@ public class ContentService {
     }
 
     // 2. 검색 데이터 콘텐츠 등록 로직
-    public ContentResponseDto createContent(ContentRequestDto requestDto, Long memberid) {
+    public ContentResponseDto createContent(ContentRequestDto requestDto, Long memberId) {
 
-        Member member = memberJpaRepository.findById(memberid).orElseThrow(
-                () -> new RuntimeException("해당 사용자는 존재하지 않습니다.")
-        );
+        Member member = getFindMember(memberId);
 
         List<Content> duplicated = contentJpaRepository.findDistinctByExternalIdAndMember_Id(
-                requestDto.getExternalId(), memberid
+                requestDto.getExternalId(), memberId
         );
 
         if (!duplicated.isEmpty()) {
-            throw new IllegalArgumentException("이미 등록된 콘텐츠입니다.");
+            throw new DuplicateContentException(CommonCode.FAIL_DUPLICATE_CONTENT);
         }
 
         Content content = new Content(
@@ -70,9 +71,7 @@ public class ContentService {
 
     // 3. 목록 조회 로직 (사용자가 등록한)
     public List<ContentResponseDto> findAllContent(Long memberId) {
-        Member member = memberJpaRepository.findById(memberId).orElseThrow(
-                () -> new RuntimeException("해당 사용자는 존재하지 않습니다.")
-        );
+        Member member = getFindMember(memberId);
         return contentJpaRepository.findByMember(member).stream()
                 .map(ContentResponseDto::fromEntity)
                 .toList();
@@ -81,21 +80,24 @@ public class ContentService {
     // 4. 콘텐츠 단건 조회 로직
     public ContentResponseDto getContentById(Long id) {
         Content content = contentJpaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 콘텐츠가 존재하지 않습니다."));
+                .orElseThrow(() -> new ContentNotFoundException(CommonCode.FAIL_CONTENT_NOT_FOUND));
         return ContentResponseDto.fromEntity(content);
     }
+
+    // 5. 콘텐츠 삭제 로직
+    public void deleteContent(Long memberId, Long contentId) {
+        Member member = getFindMember(memberId);
+        Content content = contentJpaRepository.findById(contentId)
+                .orElseThrow(() -> new ContentNotFoundException(CommonCode.FAIL_CONTENT_NOT_FOUND));
+        if (!Objects.equals(member.getId(),content.getMember().getId())){
+            throw new UnAuthorizedContentException(CommonCode.FAIL_UNAUTHORIZED_CONTENT_DELETION);
+        }
+        contentJpaRepository.delete(content);
+    }
+
+    private Member getFindMember(Long memberId) {
+        return memberJpaRepository.findById(memberId).orElseThrow(
+                () -> new MemberNotFoundException(CommonCode.FAIL_MEMBER_NOT_FOUND)
+        );
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
