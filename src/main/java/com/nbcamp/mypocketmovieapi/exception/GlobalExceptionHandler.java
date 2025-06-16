@@ -1,6 +1,9 @@
 package com.nbcamp.mypocketmovieapi.exception;
 
 import com.nbcamp.mypocketmovieapi.common.CommonResponse;
+import com.nbcamp.mypocketmovieapi.exception.content.ContentNotFoundException;
+import com.nbcamp.mypocketmovieapi.exception.content.DuplicateContentException;
+import com.nbcamp.mypocketmovieapi.exception.content.UnAuthorizedContentException;
 import com.nbcamp.mypocketmovieapi.exception.member.DuplicateEmailException;
 import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
 import com.nbcamp.mypocketmovieapi.exception.member.SignInInvalidPassword;
@@ -15,12 +18,36 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends RuntimeException {
 
+    @ExceptionHandler(DuplicateContentException.class)
+    public ResponseEntity<CommonResponse<Void>> handleContentDuplicate(DuplicateContentException e) {
+
+        CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(commonResponse);
+    }
+
+    @ExceptionHandler(ContentNotFoundException.class)
+    public ResponseEntity<CommonResponse<Void>> handleContentNotFound(ContentNotFoundException e) {
+
+        CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(commonResponse);
+    }
+
+    @ExceptionHandler(UnAuthorizedContentException.class)
+    public ResponseEntity<CommonResponse<Void>> handleContentUnAuthorized(UnAuthorizedContentException e) {
+
+        CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(commonResponse);
+    }
+
     @ExceptionHandler(UnAuthorizedReviewException.class)
     public ResponseEntity<CommonResponse<Void>> handleReviewUnAuthorized(UnAuthorizedReviewException e) {
 
         CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(commonResponse);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(commonResponse);
     }
 
     @ExceptionHandler(ReviewNotFoundException.class)

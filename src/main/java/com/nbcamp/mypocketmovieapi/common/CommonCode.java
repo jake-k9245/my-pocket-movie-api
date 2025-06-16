@@ -17,6 +17,10 @@ public enum CommonCode { // 우리는 크기가 안크니까 에러와 성공을
     FAIL_UPDATE_MISMATCH_PASSWORD(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), "기존 비밀번호가 올바르지 않습니다."),
 
     // Content
+        // FAIL
+    FAIL_DUPLICATE_CONTENT(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.name(), "이미 등록된 콘텐츠입니다."),
+    FAIL_CONTENT_NOT_FOUND(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(), "해당 콘텐츠를 찾을 수 없습니다."),
+    FAIL_UNAUTHORIZED_CONTENT_DELETION(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.name(), "해당 콘텐츠를 등록 회원만 삭제 가능합니다."),
 
     // Review
         //FAIL
