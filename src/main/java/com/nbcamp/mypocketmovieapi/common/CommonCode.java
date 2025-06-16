@@ -19,8 +19,14 @@ public enum CommonCode { // 우리는 크기가 안크니까 에러와 성공을
     // Content
 
     // Review
+        //FAIL
+    FAIL_REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(), "리뷰를 찾을 수 없습니다."),
+    FAIL_UNAUTHORIZED_REVIEW_MODIFICATION(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.name(), "리뷰는 작성자만 수정할 수 있습니다."),
+    FAIL_UNAUTHORIZED_REVIEW_DELETION(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.name(), "리뷰는 작성자만 삭제할 수 있습니다."),
 
     // Review Like
+    SUCCESS_REVIEW_LIKED(HttpStatus.CREATED.value(), HttpStatus.CREATED.name(), "해당 리뷰에 좋아요를 눌렀습니다."),
+    SUCCESS_REVIEW_UNLIKED(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.name(), "해당 리뷰에 좋아요를 취소했습니다."),
 
     // Comment
 
