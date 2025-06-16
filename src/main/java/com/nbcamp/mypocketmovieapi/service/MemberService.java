@@ -6,6 +6,8 @@ import com.nbcamp.mypocketmovieapi.dto.member.*;
 import com.nbcamp.mypocketmovieapi.entity.Member;
 import com.nbcamp.mypocketmovieapi.exception.member.DuplicateEmailException;
 import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
+import com.nbcamp.mypocketmovieapi.exception.member.SignInInvalidPassword;
+import com.nbcamp.mypocketmovieapi.exception.member.UpdateMismatchPassword;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,7 +48,7 @@ public class MemberService {
                 .orElseThrow(() -> new MemberNotFoundException(CommonCode.FAIL_INVALID_EMAIL));
 
         if(!passwordEncoder.matches(password, member.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new UpdateMismatchPassword(CommonCode.FAIL_UPDATE_MISMATCH_PASSWORD);
         }
 
         return new SignInResponseDto(member.getId(), member.getEmail(), member.getNickname());
@@ -83,7 +85,7 @@ public class MemberService {
                 .orElseThrow( () -> new MemberNotFoundException(CommonCode.FAIL_MEMBER_NOT_FOUND));
 
         if (!passwordEncoder.matches(changeMemberPasswordDto.getOldPassword(), member.getPassword())){
-            throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
+            throw new SignInInvalidPassword(CommonCode.FAIL_SIGNIN_INVALID_PASSWORD);
         }
 
         member.updatePassword(passwordEncoder.encode(changeMemberPasswordDto.getNewPassword()));
@@ -94,7 +96,7 @@ public class MemberService {
 
 
     // 회원 탈퇴
-    public    void deleteMember(Long memberId) {
+    public void deleteMember(Long memberId) {
         Member member = memberJpaRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(CommonCode.FAIL_MEMBER_NOT_FOUND));
 

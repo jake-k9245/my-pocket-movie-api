@@ -3,6 +3,8 @@ package com.nbcamp.mypocketmovieapi.exception;
 import com.nbcamp.mypocketmovieapi.common.CommonResponse;
 import com.nbcamp.mypocketmovieapi.exception.member.DuplicateEmailException;
 import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
+import com.nbcamp.mypocketmovieapi.exception.member.SignInInvalidPassword;
+import com.nbcamp.mypocketmovieapi.exception.member.UpdateMismatchPassword;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,6 +27,22 @@ public class GlobalExceptionHandler extends RuntimeException {
         CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(commonResponse);
+    }
+
+    @ExceptionHandler(SignInInvalidPassword.class)
+    public ResponseEntity<CommonResponse<Void>> handleSignInInvalidPassword(SignInInvalidPassword e) {
+
+        CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(commonResponse);
+    }
+
+    @ExceptionHandler(UpdateMismatchPassword.class)
+    public ResponseEntity<CommonResponse<Void>> handleUpdateMismatchPassword(UpdateMismatchPassword e) {
+
+        CommonResponse<Void> commonResponse = CommonResponse.fail(e.getCommonCode());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commonResponse);
     }
 
 }
