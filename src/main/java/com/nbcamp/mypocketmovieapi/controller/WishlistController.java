@@ -1,8 +1,12 @@
 package com.nbcamp.mypocketmovieapi.controller;
 
+import com.nbcamp.mypocketmovieapi.common.CommonCode;
+import com.nbcamp.mypocketmovieapi.common.CommonResponse;
+import com.nbcamp.mypocketmovieapi.common.SigninMember;
 import com.nbcamp.mypocketmovieapi.dto.WishlistResponseDto;
 import com.nbcamp.mypocketmovieapi.service.WishlistService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,23 +19,20 @@ public class WishlistController {
 
     // POST http://localhost:8080/api/contents/1/wishlists
     @PostMapping("/api/contents/{contentId}/wishlists")
-    public ResponseEntity<Void> saveWishlist(@PathVariable Long contentId) {
-        Long memberId = 1L;
+    public ResponseEntity<CommonResponse<Void>> saveWishlist(@PathVariable Long contentId, @SigninMember Long memberId) {
         wishlistService.saveWishlist(memberId, contentId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(CommonResponse.success(CommonCode.SUCCESS));
     }
 
     @GetMapping("/api/wishlists")
-    public ResponseEntity<List<WishlistResponseDto>> getWishlists() {
-        Long memberId = 1L;
-        return ResponseEntity.ok(wishlistService.getWishlists(memberId));
+    public ResponseEntity<CommonResponse<List<WishlistResponseDto>>> getWishlists(@SigninMember Long memberId) {
+        return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS, wishlistService.getWishlists(memberId)));
     }
 
     @DeleteMapping("/api/wishlists/{wishlistId}")
-    public ResponseEntity<Void> deleteWishlist(@PathVariable Long wishlistId) {
-        Long memberId = 1L;
+    public ResponseEntity<CommonResponse<Void>> deleteWishlist(@PathVariable Long wishlistId, @SigninMember Long memberId) {
         wishlistService.deleteWishlist(memberId, wishlistId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(CommonResponse.success(CommonCode.SUCCESS));
     }
 
 }
