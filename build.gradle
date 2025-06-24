@@ -25,13 +25,26 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // 검증라이브러리
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
+
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // session (jwt 끝나면 삭제)
     implementation 'at.favre.lib:bcrypt:0.10.2'
+
+    // jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6' //  JWT 토큰을 만들고, 읽고, 검증하는 인터페이스
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6' // 실제 구현체
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6' //JSON 변환을 위해 Jackson 사용
+
+
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
