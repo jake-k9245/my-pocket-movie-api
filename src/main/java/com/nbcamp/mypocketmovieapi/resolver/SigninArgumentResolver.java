@@ -19,13 +19,17 @@ public class SigninArgumentResolver implements HandlerMethodArgumentResolver { /
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-        HttpSession session = request.getSession(false); // false 넣으면 세션이 있으면 받아오고, 없으면 null 반환함
-        if(session == null || session.getAttribute(Const.SIGNIN_USER) == null) {
-            throw new RuntimeException("인증 처리가 필요합니다."); //나중에 예외처리 만들어서 바꾸기
+        // AuthenticationInterceptor에서 넣어준 memberId를 꺼내온다.
+        Object memberIdObj = request.getAttribute(Const.SIGNIN_USER);
+
+        if(memberIdObj == null) {
+            throw new IllegalAccessException("Jwt 정보에 유요한 memberId가 존재하지 않습니다.");
         }
-        return session.getAttribute(Const.SIGNIN_USER);
+
+        return memberIdObj;
     }
 
+    // 애너테이션 + 타입 둘다 있으면 true로, 이 클래스를 실행시킴
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(SigninMember.class) // 애너테이션 확인

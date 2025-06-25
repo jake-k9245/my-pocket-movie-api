@@ -36,7 +36,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
            }
            // ?? 토큰 검증 성공하면 HttpServletResponse 객체에 토큰에 들어있던 memberId를 넣어준다.
            // ?? 이 객체에 넣어준 memberId는 SigninArgumentResolver에서 꺼내서 사용할거다.
-           request.setAttribute(Const.SIGNIN_USER, jwtUtil.getClaimFromToken(token).get("memberId", Long.class));
+           request.setAttribute(Const.SIGNIN_USER, jwtUtil.getClaimFromToken(token).get("memberId", Long.class)); // "memberId" 값을 Long 타입으로 꺼내라
            return HandlerInterceptor.super.preHandle(request, response, handler);
        } else {
            setResponseFail(response);
@@ -66,4 +66,3 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
 
 }
-
