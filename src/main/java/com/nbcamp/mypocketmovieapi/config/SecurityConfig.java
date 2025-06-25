@@ -74,13 +74,17 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
         );
 
-        // 로그인 Filter
-        http.addFilterBefore(signinFilter(), JwtAuthenticationFilter.class);
+
 
         // Security에서 관리하고 순서대로 동작하는 Security Filter Chain에 우리가 만든 JWT를 검증하고 인증 처리하는 Filter를 추가한다.
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        // 첫번째는 일반 필터 가능하지만, 두번째는 무조건 스프링 필터여야함
+        http.addFilterBefore(jwtAuthenticationFilter(), SigninFilter.class);
 
-        // 필터 순서: 사용자 요청 -> Signin Filter (/api/members/signin) -> JWT 검증 Filter -> UsernamePasswordAuthenticationFilter
+        // 로그인 Filter
+        http.addFilterBefore(signinFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        // JwtAuthenticationFilter -> SigninFilter -> UsernamePasswordAuthenticationFilter
+        // 필터 순서: 사용자 요청 -> JWT 검증 Filter -> Signin Filter (/api/members/signin) -> UsernamePasswordAuthenticationFilter
 
         return http.build();
     }
