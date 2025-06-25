@@ -1,5 +1,6 @@
 package com.nbcamp.mypocketmovieapi.controller;
 
+import com.nbcamp.mypocketmovieapi.JwtUtil;
 import com.nbcamp.mypocketmovieapi.common.CommonCode;
 import com.nbcamp.mypocketmovieapi.common.CommonResponse;
 import com.nbcamp.mypocketmovieapi.common.Const;
@@ -7,6 +8,7 @@ import com.nbcamp.mypocketmovieapi.common.SigninMember;
 import com.nbcamp.mypocketmovieapi.dto.member.*;
 import com.nbcamp.mypocketmovieapi.service.MemberService;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
 public class MemberController {
+
+    private final JwtUtil jwtUtil;
     private final MemberService memberService;
 
     @PostMapping
@@ -35,19 +39,18 @@ public class MemberController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@RequestBody SignInRequestDto request, HttpSession session) {
+    public ResponseEntity<?> signIn(@RequestBody SignInRequestDto request, HttpServletResponse httpServletResponse) {
         SignInResponseDto response = memberService.signIn(request);
-        session.setAttribute(Const.SIGNIN_USER, response.getId());
+        String createToken = jwtUtil.createToken(response.getNickname(), response.getId());
         return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS_SIGNIN, response));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpSession session) {
-        session.invalidate();
-        return ResponseEntity.ok(Map.of(
+    public ResponseEntity<?> logout() {
+                return ResponseEntity.ok(Map.of(
                 "code", 200,
                 "status", "OK",
-                "data", "로그아웃 완료되었습니다"
+                "data", "로그아웃 처리를 클라이언트에서 진행하세요. (토큰 삭제)"
         ));
     }
 
@@ -73,7 +76,6 @@ public class MemberController {
 
     @PatchMapping("/me/password")
     public ResponseEntity<?> changeMemberPassword(@Parameter(hidden = true) @SigninMember Long memberId, @RequestBody ChangeMemberPasswordDto changeMemberPasswordDto) {
-
 
         // AuthenticationInterceptor 에서 이걸 다 해주기때문에 컨트롤러에서 체크할 필요가 없어짐
 //        if (memberId == null) {
