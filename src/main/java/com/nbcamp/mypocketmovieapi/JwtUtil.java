@@ -1,13 +1,11 @@
 package com.nbcamp.mypocketmovieapi;
 
-import ch.qos.logback.core.util.StringUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.MacAlgorithm;
-import io.jsonwebtoken.security.SignatureAlgorithm;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
-import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 
@@ -43,13 +40,13 @@ public class JwtUtil { // JWT 토큰을 생성하고, 검증하고, 정보를 �
 
 
     // 토큰 생성: 로그인 성공했을 때
-    //이메일 노출되는 것보다는 ID를 넣는게 낫다고 판단
-    public String createToken(String nickName, Long memberId) {
+    //이메일 노출되는 것보다는 ID를 넣는게 낫다고 판단했지만, nickname 중복될수 있게 설정해서 email로 다시 바꿈
+    public String createToken(String email, Long memberId) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .subject(nickName)
+                        .subject(email)
                         .claim("memberId", memberId)
                         .expiration(new Date(date.getTime() + TOKEN_EXPIRATION_TIME)) // 현재시간 + 100일후
                         .issuedAt(date)
