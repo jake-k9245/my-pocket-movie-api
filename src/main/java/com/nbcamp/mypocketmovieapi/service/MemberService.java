@@ -1,7 +1,6 @@
 package com.nbcamp.mypocketmovieapi.service;
 
 import com.nbcamp.mypocketmovieapi.common.CommonCode;
-import com.nbcamp.mypocketmovieapi.config.PasswordEncoder;
 import com.nbcamp.mypocketmovieapi.dto.member.*;
 import com.nbcamp.mypocketmovieapi.entity.Member;
 import com.nbcamp.mypocketmovieapi.exception.member.DuplicateEmailException;
@@ -10,6 +9,7 @@ import com.nbcamp.mypocketmovieapi.exception.member.SignInInvalidPassword;
 import com.nbcamp.mypocketmovieapi.exception.member.UpdateMismatchPassword;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
