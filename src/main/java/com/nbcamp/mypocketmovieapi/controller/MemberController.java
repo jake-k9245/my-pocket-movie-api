@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/members")
 public class MemberController {
 
-    private final JwtUtil jwtUtil;
     private final MemberService memberService;
 
     @PostMapping

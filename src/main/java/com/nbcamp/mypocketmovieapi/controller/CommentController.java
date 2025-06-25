@@ -6,6 +6,7 @@ import com.nbcamp.mypocketmovieapi.common.SigninMember;
 import com.nbcamp.mypocketmovieapi.dto.review.CommentResponseDto;
 import com.nbcamp.mypocketmovieapi.dto.review.SaveCommentRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.review.UpdateCommentRequestDto;
+import com.nbcamp.mypocketmovieapi.security.UserDetailsImpl;
 import com.nbcamp.mypocketmovieapi.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,9 +30,9 @@ public class CommentController {
     public ResponseEntity<CommonResponse<Void>> saveComments(
             @PathVariable Long reviewId,
             @RequestBody SaveCommentRequestDto requestDto,
-            @SigninMember Long memberId
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        commentService.saveComments(memberId, reviewId, requestDto);
+        commentService.saveComments(userDetails.getMember().getId(), reviewId, requestDto);
         return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS));
     }
 
@@ -40,9 +42,9 @@ public class CommentController {
     public ResponseEntity<CommonResponse<Void>> updateComments(
             @PathVariable Long commentId,
             @RequestBody UpdateCommentRequestDto requestDto,
-            @SigninMember Long memberId
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        commentService.updateComments(memberId, commentId, requestDto);
+        commentService.updateComments(userDetails.getMember().getId(), commentId, requestDto);
         return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS));
     }
 
