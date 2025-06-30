@@ -25,3 +25,6 @@ tmdb:
   api:
     base-url: https://api.themoviedb.org/3
     access-token: ${api.tmdb}
+jwt:
+  secret:
+    key: ${secret.key}
