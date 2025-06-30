@@ -5,10 +5,12 @@ import com.nbcamp.mypocketmovieapi.common.CommonCode;
 import com.nbcamp.mypocketmovieapi.common.CommonResponse;
 import com.nbcamp.mypocketmovieapi.common.SigninMember;
 import com.nbcamp.mypocketmovieapi.dto.reviewLike.FindAllReviewLikeResponseDto;
+import com.nbcamp.mypocketmovieapi.security.UserDetailsImpl;
 import com.nbcamp.mypocketmovieapi.service.ReviewLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,8 @@ public class ReviewLikeController {
     private final ReviewLikeService reviewLikeService;
 
     @PostMapping("/reviews/{reviewId}/likes")
-    public ResponseEntity<CommonResponse<Void>> toggleReviewLike(@PathVariable Long reviewId, @SigninMember Long memberId) {
-        CommonCode code = reviewLikeService.toggleReviewLike(memberId, reviewId);
+    public ResponseEntity<CommonResponse<Void>> toggleReviewLike(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        CommonCode code = reviewLikeService.toggleReviewLike(userDetails.getMember().getId(), reviewId);
         return ResponseEntity.status(HttpStatus.CREATED).body(CommonResponse.success(code));
     }
 

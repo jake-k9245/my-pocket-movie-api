@@ -6,6 +6,7 @@ import com.nbcamp.mypocketmovieapi.common.SigninMember;
 import com.nbcamp.mypocketmovieapi.dto.content.ContentDetail;
 import com.nbcamp.mypocketmovieapi.dto.content.ContentRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.content.ContentResponseDto;
+import com.nbcamp.mypocketmovieapi.security.UserDetailsImpl;
 import com.nbcamp.mypocketmovieapi.service.ContentService;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,9 +39,9 @@ public class ContentController {
     @PostMapping
     public ResponseEntity<CommonResponse<ContentResponseDto>> createContent(
             @RequestBody ContentRequestDto requestDto,
-            @SigninMember Long memberId
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        ContentResponseDto response = contentService.createContent(requestDto, memberId);
+        ContentResponseDto response = contentService.createContent(requestDto, userDetails.getMember().getId());
         return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS, response));
     }
 
@@ -51,7 +53,6 @@ public class ContentController {
             ) {
         return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS, contentService.findAllContent(memberId, pageable)));
     }
-    // 페이지 번호, 정렬 조건, 페이지 크기
 
     // 4. 콘텐츠 정보 조회
     @GetMapping("/{id}")
@@ -62,10 +63,10 @@ public class ContentController {
     // 5. 컨텐츠 삭제
     @DeleteMapping("/{contentId}")
     public ResponseEntity<CommonResponse<Void>> deleteContent (
-            @SigninMember Long memberId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam Long contentId
     ) {
-        contentService.deleteContent(memberId, contentId);
+        contentService.deleteContent(userDetails.getMember().getId(), contentId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(CommonResponse.success(CommonCode.SUCCESS));
     }
 

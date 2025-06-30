@@ -7,10 +7,12 @@ import com.nbcamp.mypocketmovieapi.common.SigninMember;
 import com.nbcamp.mypocketmovieapi.dto.review.ReviewCreateRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.review.ReviewResponseDto;
 import com.nbcamp.mypocketmovieapi.dto.review.ReviewUpdateRequestDto;
+import com.nbcamp.mypocketmovieapi.security.UserDetailsImpl;
 import com.nbcamp.mypocketmovieapi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,9 +29,9 @@ public class ReviewController {
     public ResponseEntity<CommonResponse<ReviewResponseDto>> save(
             @PathVariable Long contentId,
             @RequestBody ReviewCreateRequestDto requestDto,
-            @SigninMember Long memberId
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        ReviewResponseDto reviewResponseDto = reviewService.save(contentId, memberId, requestDto);
+        ReviewResponseDto reviewResponseDto = reviewService.save(contentId, userDetails.getMember().getId(), requestDto);
         return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS, reviewResponseDto));
     }
 
@@ -59,15 +61,15 @@ public class ReviewController {
     public ResponseEntity<CommonResponse<Void>> updateReviews(
             @PathVariable Long reviewId,
             @RequestBody ReviewUpdateRequestDto requestDto,
-            @SigninMember Long memberId
+            @AuthenticationPrincipal UserDetailsImpl userDetails
         ) {
-        reviewService.updateReviews(memberId, reviewId, requestDto);
+        reviewService.updateReviews(userDetails.getMember().getId(), reviewId, requestDto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(CommonResponse.success(CommonCode.SUCCESS));
     }
 
     @DeleteMapping("/reviews/{reviewId}")
-    public ResponseEntity<CommonResponse<Void>> deleteReview(@PathVariable Long reviewId, @SigninMember Long memberId) {
-        reviewService.deleteReview(memberId, reviewId);
+    public ResponseEntity<CommonResponse<Void>> deleteReview(@PathVariable Long reviewId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        reviewService.deleteReview(userDetails.getMember().getId(), reviewId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(CommonResponse.success(CommonCode.SUCCESS));
     }
 

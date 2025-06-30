@@ -7,6 +7,7 @@ import com.nbcamp.mypocketmovieapi.dto.review.ReviewUpdateRequestDto;
 import com.nbcamp.mypocketmovieapi.entity.Content;
 import com.nbcamp.mypocketmovieapi.entity.Member;
 import com.nbcamp.mypocketmovieapi.entity.Review;
+import com.nbcamp.mypocketmovieapi.exception.content.ContentNotFoundException;
 import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
 import com.nbcamp.mypocketmovieapi.exception.review.ReviewNotFoundException;
 import com.nbcamp.mypocketmovieapi.exception.review.UnAuthorizedReviewException;
@@ -34,7 +35,7 @@ public class ReviewService {
 
         // Content 담당자가 완료 후 처리
         Content findContent = contentRepository.findById(contentId).orElseThrow(
-                () -> new RuntimeException("해당하는 콘텐츠가 존재하지 않습니다.")
+                () -> new ContentNotFoundException(CommonCode.FAIL_CONTENT_NOT_FOUND)
         );
 
         Review review = Review.builder()
@@ -64,7 +65,7 @@ public class ReviewService {
 
         // 리뷰를 작성한 콘텐츠 정보 조회 select * from contents where id = 1; , 기본 제공 메서드
         Content content = contentRepository.findById(contentId).orElseThrow(
-                () -> new RuntimeException("해당하는 콘텐츠를 찾지 못하였습니다.")
+                () -> new ContentNotFoundException(CommonCode.FAIL_CONTENT_NOT_FOUND)
         );
 
         // 해당 콘텐츠의 모든 리뷰 조회

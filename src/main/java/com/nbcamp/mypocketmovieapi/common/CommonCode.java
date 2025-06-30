@@ -38,6 +38,9 @@ public enum CommonCode { // 우리는 크기가 안크니까 에러와 성공을
     FAIL_UNAUTHORIZED_COMMENT_DELETION(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.name(), "댓글은 작성자만 삭제할 수 있습니다."),
 
     // Wishlist
+    FAIL_DUPLICATE_WISHLIST(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT.name(), "이미 등록한 콘텐츠를 위시리스트에 다시 추가할 수 없습니다."),
+    FAIL_WISHLIST_NOT_FOUND(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name(), "위시리스트를 찾을 수 없습니다."),
+    FAIL_UNAUTHORIZED_WISHLIST_DELETION(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN.name(), "위시리스트는 작성자만 삭제할 수 있습니다."),
 
 
     // 귀찮은 사람을 위한 만능 이넘
