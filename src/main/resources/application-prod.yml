@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: my-pocket-movie-api
+  config:
+    import: aws-parameterstore:/config/my-pocket/
+  datasource:
+    url: jdbc:mysql://${db.host}:3306/${db.name}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${db.username}
+    password: ${db.password}
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: always
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+tmdb:
+  api:
+    base-url: https://api.themoviedb.org/3
+    access-token: ${api.tmdb}

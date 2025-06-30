@@ -11,7 +11,10 @@ import com.nbcamp.mypocketmovieapi.exception.member.MemberNotFoundException;
 import com.nbcamp.mypocketmovieapi.repository.ContentJpaRepository;
 import com.nbcamp.mypocketmovieapi.repository.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Objects;
@@ -70,11 +73,10 @@ public class ContentService {
     }
 
     // 3. 목록 조회 로직 (사용자가 등록한)
-    public List<ContentResponseDto> findAllContent(Long memberId) {
+    public Page<ContentResponseDto> findAllContent(Long memberId, Pageable pageable) {
         Member member = getFindMember(memberId);
-        return contentJpaRepository.findByMember(member).stream()
-                .map(ContentResponseDto::fromEntity)
-                .toList();
+        return contentJpaRepository.findByMember(member, pageable)
+                .map(ContentResponseDto::fromEntity);
     }
 
     // 4. 콘텐츠 단건 조회 로직

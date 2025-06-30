@@ -8,6 +8,11 @@ import com.nbcamp.mypocketmovieapi.dto.content.ContentRequestDto;
 import com.nbcamp.mypocketmovieapi.dto.content.ContentResponseDto;
 import com.nbcamp.mypocketmovieapi.service.ContentService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +45,13 @@ public class ContentController {
 
     // 3. 목록 조회
     @GetMapping
-    public ResponseEntity<CommonResponse<List<ContentResponseDto>>> getAllContent(@SigninMember Long memberId) {
-        return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS, contentService.findAllContent(memberId)));
+    public ResponseEntity<CommonResponse<Page<ContentResponseDto>>> getAllContent(
+            @SigninMember Long memberId,
+            @ParameterObject @PageableDefault(page = 0, size = 10, sort = {"createdAt"}, direction = Sort.Direction.DESC)Pageable pageable
+            ) {
+        return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS, contentService.findAllContent(memberId, pageable)));
     }
+    // 페이지 번호, 정렬 조건, 페이지 크기
 
     // 4. 콘텐츠 정보 조회
     @GetMapping("/{id}")
