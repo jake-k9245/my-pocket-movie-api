@@ -1,0 +1,62 @@
+# .github/workflows/deploy.yml
+name: CI/CD with AWS CodeDeploy
+
+on:
+  push:
+    branches: [ "master" ] # 'master' 브랜치에 코드가 푸시될 때마다 이 워크플로우를 실행합니다.
+
+env:
+  AWS_REGION: ap-northeast-2
+  S3_BUCKET_NAME: my-pocket-build-artifacts-23
+  CODE_DEPLOY_APPLICATION_NAME: my-pocket
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: my-pocket-blue-green-dg
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # 이 작업은 최신 우분투 환경에서 실행됩니다.
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4 # 1. 코드를 내려받습니다.
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4 # 2. Java 17을 설치합니다.
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew # 3. gradlew 파일에 실행 권한을 부여합니다.
+
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test # 4. Gradle로 프로젝트를 빌드합니다.
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4 # 5. GitHub Secrets에 저장된 키를 사용하여 AWS에 접근할 자격을 얻습니다.
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+        # CodeDeploy는 zip 압축 파일을 사용하므로, 필요한 파일들을 압축합니다.
+        # 여기서는 빌드된 jar 파일, appspec.yml, 배포 스크립트 폴더를 압축합니다.
+        # 6. 압축한 배포 패키지를 S3 버킷에 업로드합니다.
+      - name: Create ZIP file and Upload to S3
+        id: upload_step
+        run: |
+          DEPLOY_PACKAGE_NAME="my-pocket-deploy-package.zip"
+          S3_KEY="my-pocket-deploy-package-${{ github.sha }}.zip"
+          JAR_FILE=$(find build/libs -name "*.jar" ! -name "*-plain.jar")
+          echo "Found JAR file: $JAR_FILE"
+          zip -r $DEPLOY_PACKAGE_NAME $JAR_FILE appspec.yml scripts/
+          aws s3 cp $DEPLOY_PACKAGE_NAME s3://${{ env.S3_BUCKET_NAME }}/$S3_KEY
+          echo "S3_KEY=$S3_KEY" >> $GITHUB_OUTPUT
+
+        # 7. AWS CodeDeploy 서비스에게 배포를 시작하라고 명령합니다.
+        # S3에 업로드된 새 버전을 사용하라고 알려줍니다.
+      - name: Deploy to EC2 via CodeDeploy
+        run: |
+          aws deploy create-deployment \
+            --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+            --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+            --s3-location bucket=${{ env.S3_BUCKET_NAME }},key=${{ steps.upload_step.outputs.S3_KEY }},bundleType=zip
