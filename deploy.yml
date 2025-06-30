@@ -3,7 +3,7 @@ name: CI/CD with AWS CodeDeploy
 
 on:
   push:
-    branches: [ "master" ] # 'master' 브랜치에 코드가 푸시될 때마다 이 워크플로우를 실행합니다.
+    branches: [ "development" ]
 
 env:
   AWS_REGION: ap-northeast-2
