@@ -70,7 +70,7 @@ public class SecurityConfig {
         // 사용자 Request URL 제어
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll() // .permitAll() 앞에것들은 다 승인을 해줘라!
-                .requestMatchers("/api/members", "/", "/api/members/signin").permitAll()
+                .requestMatchers("/api/members", "/", "/api/members/signin", "/actuator/health").permitAll()
                 .anyRequest().authenticated()
         );
 
