@@ -72,4 +72,9 @@ public class MemberController {
         return ResponseEntity.ok(CommonResponse.success(CommonCode.SUCCESS));
     }
 
+    @PostMapping("/signin")
+    public void loginForSwagger() {
+        throw new UnsupportedOperationException("이 엔드포인트는 Swagger 문서용입니다. 실제 로그인은 필터에서 처리됩니다.");
+    }
+
 }
