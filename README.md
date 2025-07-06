@@ -77,5 +77,4 @@
 
 - 와이어프레임 보기 (Figma 등)![Frame 52](https://github.com/user-attachments/assets/5a3f0565-e0db-4d62-88b8-fb6bd199fcce)
 
-- 기술 아키텍처 이미지
-- API 명세서 (Swagger 등)
+- 기술 아키텍처 이미지![23_1](https://github.com/user-attachments/assets/ed9099c7-0909-4148-8b8d-5590ceb8a0b9)
