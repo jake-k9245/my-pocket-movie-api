@@ -73,14 +73,7 @@ public class MemberController {
     }
 
     @PostMapping("/signin")
-    public void loginForSwagger() {
-        throw new UnsupportedOperationException("이 엔드포인트는 Swagger 문서용입니다. 실제 로그인은 필터에서 처리됩니다. ");
-    }
-
-    @PostMapping("/signin")
     public void loginForSwagger(@RequestBody SignInRequestDto requestDto) {
         throw new UnsupportedOperationException("이 엔드포인트는 Swagger 문서용입니다. 실제 로그인은 필터에서 처리됩니다.");
     }
-
-
 }
