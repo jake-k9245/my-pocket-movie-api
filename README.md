@@ -78,5 +78,3 @@
 - 와이어프레임 보기 (Figma 등)![Frame 52](https://github.com/user-attachments/assets/5a3f0565-e0db-4d62-88b8-fb6bd199fcce)
 
 - 기술 아키텍처 이미지![23_1](https://github.com/user-attachments/assets/ed9099c7-0909-4148-8b8d-5590ceb8a0b9)
-
-- ERD 이미지![23_1](<img width="1257" height="608" alt="스크린샷 2025-10-04 오전 10 48 52" src="https://github.com/user-attachments/assets/844ec6c8-b5b9-42ca-8e92-b6e6252fa909" />)
